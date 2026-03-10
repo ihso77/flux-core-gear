@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import ProductGrid from "@/components/ProductGrid";
 import FeaturesSection from "@/components/FeaturesSection";
 import Footer from "@/components/Footer";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const Index = () => {
   return (
@@ -12,6 +13,7 @@ const Index = () => {
       <ProductGrid />
       <FeaturesSection />
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };
