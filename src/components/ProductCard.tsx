@@ -8,6 +8,7 @@ interface ProductCardProps {
   price: number;
   image: string;
   isHero?: boolean;
+  className?: string;
 }
 
 const ProductCard = ({ name, category, price, image, isHero = false }: ProductCardProps) => {
