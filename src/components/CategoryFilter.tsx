@@ -34,9 +34,9 @@ export const categories: Category[] = [
     query: "keyboard",
   },
   {
-    id: "mice",
-    label: "Mice",
-    labelAr: "الفئران",
+    id: "mouse",
+    label: "Mouse",
+    labelAr: "الفأرة",
     icon: Mouse,
     query: "mouse",
   },

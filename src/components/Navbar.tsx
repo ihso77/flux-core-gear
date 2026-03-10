@@ -6,7 +6,7 @@ import CartDrawer from "./CartDrawer";
 const categories = [
   { id: "all", label: "All Products", icon: Sparkles },
   { id: "keyboards", label: "Keyboards", icon: Keyboard },
-  { id: "mice", label: "Mice", icon: Mouse },
+  { id: "mouse", label: "Mouse", icon: Mouse },
   { id: "headsets", label: "Headsets", icon: Headphones },
   { id: "monitors", label: "Monitors", icon: Monitor },
   { id: "controllers", label: "Controllers", icon: Gamepad2 },
