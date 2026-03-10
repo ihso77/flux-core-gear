@@ -8,16 +8,17 @@ interface ProductCardProps {
   price: number;
   image: string;
   isHero?: boolean;
+  className?: string;
 }
 
-const ProductCard = ({ name, category, price, image, isHero = false }: ProductCardProps) => {
+const ProductCard = ({ name, category, price, image, isHero = false, className = "" }: ProductCardProps) => {
   const [hovered, setHovered] = useState(false);
 
   return (
     <motion.div
       className={`group relative flex flex-col overflow-hidden rounded-xl border bg-card transition-all duration-500 ${
         hovered ? "border-nebula/60" : "border-border"
-      } ${isHero ? "col-span-2 row-span-2 md:col-span-3 lg:col-span-6" : "col-span-1 md:col-span-3 lg:col-span-2"}`}
+      } ${className}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       initial={{ opacity: 0, y: 40 }}
