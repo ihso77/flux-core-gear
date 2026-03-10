@@ -4,9 +4,9 @@ import {
   Mouse, 
   Headphones, 
   Monitor, 
-  Package, 
   Gamepad2,
   Cable,
+  Package,
   Sparkles
 } from "lucide-react";
 
@@ -16,6 +16,7 @@ export interface Category {
   labelAr: string;
   icon: React.ComponentType<{ className?: string }>;
   query: string;
+  priority: number; // For sorting
 }
 
 export const categories: Category[] = [
@@ -25,6 +26,7 @@ export const categories: Category[] = [
     labelAr: "جميع المنتجات",
     icon: Sparkles,
     query: "",
+    priority: 0,
   },
   {
     id: "keyboards",
@@ -32,6 +34,7 @@ export const categories: Category[] = [
     labelAr: "لوحات المفاتيح",
     icon: Keyboard,
     query: "keyboard",
+    priority: 1,
   },
   {
     id: "mouse",
@@ -39,6 +42,7 @@ export const categories: Category[] = [
     labelAr: "الفأرة",
     icon: Mouse,
     query: "mouse",
+    priority: 2,
   },
   {
     id: "headsets",
@@ -46,6 +50,7 @@ export const categories: Category[] = [
     labelAr: "سماعات الرأس",
     icon: Headphones,
     query: "headset OR headphone",
+    priority: 3,
   },
   {
     id: "monitors",
@@ -53,6 +58,7 @@ export const categories: Category[] = [
     labelAr: "الشاشات",
     icon: Monitor,
     query: "monitor",
+    priority: 4,
   },
   {
     id: "controllers",
@@ -60,13 +66,15 @@ export const categories: Category[] = [
     labelAr: "وحدات التحكم",
     icon: Gamepad2,
     query: "controller OR gamepad",
+    priority: 5,
   },
   {
     id: "accessories",
     label: "Accessories",
     labelAr: "الإكسسوارات",
     icon: Cable,
-    query: "accessory OR cable OR pad OR stand",
+    query: "accessory OR cable OR pad OR stand OR mousepad",
+    priority: 6,
   },
   {
     id: "bundles",
@@ -74,8 +82,9 @@ export const categories: Category[] = [
     labelAr: "الحزم",
     icon: Package,
     query: "bundle OR kit OR set",
+    priority: 7,
   },
-];
+].sort((a, b) => a.priority - b.priority); // Sort by priority
 
 interface CategoryFilterProps {
   activeCategory: string;
