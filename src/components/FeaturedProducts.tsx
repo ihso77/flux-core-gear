@@ -12,24 +12,28 @@ const products = [
     price: 189.99,
     image: productKeyboard,
     isHero: true,
+    className: "col-span-2 md:col-span-6",
   },
   {
     name: "Spectre X1 Gaming Mouse",
     category: "Mice",
     price: 79.99,
     image: productMouse,
+    className: "col-span-1 md:col-span-2",
   },
   {
     name: "Eclipse Pro Headset",
     category: "Audio",
     price: 149.99,
     image: productHeadset,
+    className: "col-span-1 md:col-span-2",
   },
   {
     name: "Void XL Desk Pad",
     category: "Accessories",
     price: 39.99,
     image: productMousepad,
+    className: "col-span-2 md:col-span-2",
   },
 ];
 
@@ -52,7 +56,7 @@ const FeaturedProducts = () => {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-6 lg:grid-cols-12 lg:gap-6">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-6 lg:gap-6">
           {products.map((product) => (
             <ProductCard key={product.name} {...product} />
           ))}

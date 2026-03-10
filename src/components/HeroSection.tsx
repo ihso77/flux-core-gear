@@ -50,13 +50,14 @@ const HeroSection = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="relative flex justify-center"
+          className="relative flex items-center justify-center"
         >
-          <div className="animate-float">
+          <div className="relative animate-float">
+            <div className="pointer-events-none absolute -inset-10 rounded-full bg-primary/10 blur-[80px]" />
             <img
               src={heroImage}
               alt="Premium mechanical keyboard with violet backlighting"
-              className="w-full max-w-2xl rounded-2xl"
+              className="relative w-full max-w-2xl rounded-2xl"
             />
           </div>
         </motion.div>
