@@ -1,0 +1,61 @@
+const footerLinks = {
+  Products: ["Keyboards", "Mice", "Headsets", "Desk Pads", "Accessories"],
+  Support: ["Contact Us", "Shipping", "Returns", "Warranty", "FAQ"],
+  Company: ["About", "Careers", "Press", "Blog"],
+};
+
+const Footer = () => {
+  return (
+    <footer className="border-t border-border bg-background py-16">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+          <div className="col-span-2 md:col-span-1">
+            <span className="font-display text-xl font-semibold tracking-tight text-foreground">
+              VOID<span className="text-gradient-pulse">&</span>FORM
+            </span>
+            <p className="mt-4 max-w-xs font-body text-sm leading-relaxed text-muted-foreground">
+              High-performance gaming peripherals engineered for those who
+              demand more.
+            </p>
+          </div>
+
+          {Object.entries(footerLinks).map(([title, links]) => (
+            <div key={title}>
+              <h4 className="mb-4 font-display text-sm font-medium text-foreground">
+                {title}
+              </h4>
+              <ul className="space-y-2.5">
+                {links.map((link) => (
+                  <li key={link}>
+                    <a
+                      href="#"
+                      className="font-body text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                    >
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
+          <p className="font-body text-xs text-muted-foreground">
+            © 2026 VOID&FORM. All rights reserved.
+          </p>
+          <div className="flex gap-6">
+            <a href="#" className="font-body text-xs text-muted-foreground hover:text-foreground">
+              Privacy
+            </a>
+            <a href="#" className="font-body text-xs text-muted-foreground hover:text-foreground">
+              Terms
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
