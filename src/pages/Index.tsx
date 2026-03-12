@@ -1,7 +1,11 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import MarqueeBanner from "@/components/MarqueeBanner";
 import ProductGrid from "@/components/ProductGrid";
+import VideoSection from "@/components/VideoSection";
 import FeaturesSection from "@/components/FeaturesSection";
+import TrustBadges from "@/components/TrustBadges";
+import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 
@@ -10,8 +14,12 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      <MarqueeBanner />
       <ProductGrid />
+      <VideoSection />
       <FeaturesSection />
+      <TrustBadges />
+      <NewsletterSection />
       <Footer />
       <ScrollToTop />
     </div>
