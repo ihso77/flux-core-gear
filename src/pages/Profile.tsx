@@ -348,7 +348,7 @@ const Profile = () => {
                 )}
               </motion.button>
             )}
-          </div>
+            </motion.div>
 
           {/* Right Column - Gaming & Settings */}
           <motion.div
