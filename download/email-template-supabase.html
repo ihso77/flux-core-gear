@@ -1,0 +1,70 @@
+<!-- NOVA Email Template for Supabase -->
+
+<div style="background-color: #0a0a0f; padding: 40px 20px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;">
+  <div style="max-width: 520px; margin: 0 auto; background: linear-gradient(180deg, #14141f 0%, #0d0d14 100%); border-radius: 20px; border: 1px solid rgba(139, 92, 246, 0.2); overflow: hidden;">
+    
+    <!-- Header with Glow -->
+    <div style="text-align: center; padding: 50px 40px 30px; background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 70%);">
+      
+      <!-- Logo -->
+      <h1 style="font-size: 36px; font-weight: 700; color: #ffffff; margin: 0; font-family: 'Space Grotesk', sans-serif;">
+        NOV<span style="background: linear-gradient(90deg, #8b5cf6, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">A</span>
+      </h1>
+      
+      <!-- Icon -->
+      <div style="margin-top: 30px; width: 80px; height: 80px; background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%); border-radius: 20px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Content -->
+    <div style="padding: 0 40px 40px;">
+      
+      <h2 style="margin: 0 0 12px; font-size: 26px; font-weight: 700; color: #ffffff; text-align: center; font-family: 'Space Grotesk', sans-serif;">
+        Confirm Your Signup
+      </h2>
+      
+      <p style="margin: 0 0 30px; font-size: 15px; color: #94a3b8; text-align: center; line-height: 1.6;">
+        Welcome to NOVA! Confirm your email to access premium gaming gear.
+      </p>
+      
+      <!-- Confirm Button -->
+      <div style="text-align: center;">
+        <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 16px 48px; background: linear-gradient(90deg, #8b5cf6 0%, #6366f1 100%); color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 12px; box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);">
+          Confirm Email Address
+        </a>
+      </div>
+      
+      <!-- Divider -->
+      <div style="margin: 35px 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), transparent);"></div>
+      
+      <!-- Alternative Link -->
+      <p style="margin: 0 0 15px; font-size: 13px; color: #64748b; text-align: center;">
+        Button not working? Copy this link:
+      </p>
+      <div style="font-size: 12px; color: #8b5cf6; text-align: center; word-break: break-all; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.2);">
+        {{ .ConfirmationURL }}
+      </div>
+      
+      <!-- Security Notice -->
+      <div style="margin-top: 30px; padding: 16px; background: rgba(239, 68, 68, 0.1); border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.2);">
+        <p style="margin: 0; font-size: 13px; color: #94a3b8; text-align: center;">
+          ⚠️ If you didn't create an account with NOVA, please ignore this email.
+        </p>
+      </div>
+      
+    </div>
+    
+    <!-- Footer -->
+    <div style="padding: 30px 40px; background: rgba(0, 0, 0, 0.3); border-top: 1px solid rgba(139, 92, 246, 0.1); text-align: center;">
+      <p style="margin: 0; font-size: 12px; color: #475569; line-height: 1.5;">
+        © 2025 NOVA Gaming. All rights reserved.<br>
+        Premium gaming peripherals engineered for excellence.
+      </p>
+    </div>
+    
+  </div>
+</div>
