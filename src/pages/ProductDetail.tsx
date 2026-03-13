@@ -76,7 +76,7 @@ const ProductDetail = () => {
           Back
         </motion.button>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
           {/* Images */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
