@@ -119,7 +119,7 @@ const ProductGrid = () => {
             </p>
           </motion.div>
           
-          <h2 className="font-display text-4xl font-bold text-foreground md:text-5xl mb-4">
+          <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl md:text-5xl mb-4">
             Shop the{" "}
             <motion.span
               className="text-gradient-pulse inline-block"
