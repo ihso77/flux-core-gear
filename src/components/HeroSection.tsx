@@ -182,7 +182,7 @@ const HeroSection = () => {
           >
             <motion.a
               href="#shop"
-              className="group relative inline-flex items-center gap-2 rounded-2xl gradient-pulse px-8 py-4 font-body text-sm font-semibold text-primary-foreground transition-all duration-300 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 rounded-2xl gradient-pulse px-6 py-3 sm:px-8 sm:py-4 font-body text-sm font-semibold text-primary-foreground transition-all duration-300 overflow-hidden"
               whileHover={{ scale: 1.04, boxShadow: "0 0 40px hsl(271 81% 56% / 0.4)" }}
               whileTap={{ scale: 0.97 }}
             >
