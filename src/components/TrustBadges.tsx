@@ -42,7 +42,7 @@ const TrustBadges = () => {
               <motion.div
                 whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
                 transition={{ duration: 0.5 }}
-                className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500"
+                className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500"
               >
                 <badge.icon className="h-6 w-6" />
               </motion.div>

@@ -183,7 +183,7 @@ const FeaturesSection = () => {
           </motion.div>
 
           <motion.h2
-            className="font-display text-4xl font-bold text-foreground md:text-5xl"
+            className="font-display text-3xl font-bold text-foreground sm:text-4xl md:text-5xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

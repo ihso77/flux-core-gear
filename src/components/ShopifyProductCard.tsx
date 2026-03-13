@@ -161,7 +161,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
             disabled={isLoading || !variant?.availableForSale}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
-            className="relative flex items-center gap-2 rounded-xl gradient-pulse px-4 py-2.5 font-body text-xs font-semibold text-primary-foreground transition-shadow duration-300 hover:shadow-[0_0_25px_hsl(271_81%_56%/0.5)] disabled:opacity-50 overflow-hidden"
+            className="relative flex items-center gap-1.5 sm:gap-2 rounded-xl gradient-pulse px-3 py-2 sm:px-4 sm:py-2.5 font-body text-[10px] sm:text-xs font-semibold text-primary-foreground transition-shadow duration-300 hover:shadow-[0_0_25px_hsl(271_81%_56%/0.5)] disabled:opacity-50 overflow-hidden"
           >
             {/* Animated shimmer */}
             <motion.span

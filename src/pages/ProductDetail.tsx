@@ -127,7 +127,7 @@ const ProductDetail = () => {
             </p>
 
             {variant && (
-              <p className="mb-8 font-display text-3xl font-bold text-foreground">
+              <p className="mb-6 sm:mb-8 font-display text-2xl sm:text-3xl font-bold text-foreground">
                 {variant.price.currencyCode} {parseFloat(variant.price.amount).toFixed(2)}
               </p>
             )}

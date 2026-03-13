@@ -317,7 +317,7 @@ const VideoSection = () => {
               className="text-center p-4 sm:p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors"
             >
               <motion.div
-                className="font-display text-3xl font-bold text-foreground mb-1"
+                className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1"
                 whileHover={{ color: "hsl(271, 81%, 56%)" }}
               >
                 {stat.value}

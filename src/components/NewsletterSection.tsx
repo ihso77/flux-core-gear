@@ -53,7 +53,7 @@ const NewsletterSection = () => {
             </span>
           </motion.div>
 
-          <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl mb-4">
+          <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl mb-4">
             Join the{" "}
             <span className="text-gradient-pulse">Nova</span>{" "}
             Community
