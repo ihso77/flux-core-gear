@@ -314,7 +314,7 @@ const VideoSection = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.5 + index * 0.1 }}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="text-center p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors"
+              className="text-center p-4 sm:p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors"
             >
               <motion.div
                 className="font-display text-3xl font-bold text-foreground mb-1"
