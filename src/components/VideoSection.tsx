@@ -239,7 +239,7 @@ const VideoSection = () => {
                     whileTap={{ scale: 0.95 }}
                     className="relative z-10 flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-full gradient-pulse shadow-lg shadow-primary/30"
                   >
-                    <Play className="h-10 w-10 text-primary-foreground ml-1" />
+                    <Play className="h-6 w-6 sm:h-10 sm:w-10 text-primary-foreground ml-0.5" />
                   </motion.button>
                 </motion.div>
               </div>
