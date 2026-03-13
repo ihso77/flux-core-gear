@@ -143,7 +143,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
             {node.title}
           </h3>
           {node.description && (
-            <p className="mt-1.5 line-clamp-2 font-body text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-1 line-clamp-2 font-body text-[10px] sm:text-xs leading-relaxed text-muted-foreground">
               {node.description}
             </p>
           )}
