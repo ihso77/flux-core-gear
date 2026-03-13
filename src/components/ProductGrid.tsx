@@ -88,7 +88,7 @@ const ProductGrid = () => {
   const activeCategoryData = categories.find(c => c.id === activeCategory);
 
   return (
-    <section id="shop" className="relative bg-background py-32">
+    <section id="shop" className="relative bg-background py-16 sm:py-32">
       {/* Background decoration */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 bg-primary/3 blur-[150px] rounded-full" />
 
