@@ -122,7 +122,7 @@ const ProductDetail = () => {
             <h1 className="mb-3 sm:mb-4 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
               {product.title}
             </h1>
-            <p className="mb-6 font-body text-base leading-relaxed text-muted-foreground">
+            <p className="mb-4 sm:mb-6 font-body text-sm sm:text-base leading-relaxed text-muted-foreground">
               {product.description}
             </p>
 
