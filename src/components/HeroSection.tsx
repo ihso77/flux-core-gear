@@ -200,7 +200,7 @@ const HeroSection = () => {
 
             <motion.a
               href="#collections"
-              className="group relative inline-flex items-center gap-2 rounded-2xl border border-border px-8 py-4 font-body text-sm font-semibold text-foreground transition-all duration-500 hover:border-primary/50 hover:bg-primary/5 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 rounded-2xl border border-border px-6 py-3 sm:px-8 sm:py-4 font-body text-sm font-semibold text-foreground transition-all duration-500 hover:border-primary/50 hover:bg-primary/5 overflow-hidden"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
             >
