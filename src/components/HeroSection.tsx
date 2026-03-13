@@ -285,7 +285,7 @@ const HeroSection = () => {
 
             {/* Floating badges with glassmorphism */}
             <motion.div
-              className="absolute -right-6 top-1/4 flex items-center gap-2 rounded-2xl bg-card/60 backdrop-blur-xl border border-border/50 px-4 py-2 shadow-2xl"
+              className="absolute -right-2 sm:-right-6 top-1/4 flex items-center gap-2 rounded-2xl bg-card/60 backdrop-blur-xl border border-border/50 px-3 py-1.5 sm:px-4 sm:py-2 shadow-2xl"
               animate={{ y: [0, -12, 0], x: [0, 5, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
             >
