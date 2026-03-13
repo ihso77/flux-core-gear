@@ -151,7 +151,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
 
         <div className="flex items-center justify-between pt-2 border-t border-border/50">
           <div className="flex flex-col">
-            <span className="font-display text-lg font-bold text-foreground">
+            <span className="font-display text-sm sm:text-lg font-bold text-foreground">
               {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
             </span>
           </div>
