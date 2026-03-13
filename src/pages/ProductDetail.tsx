@@ -119,7 +119,7 @@ const ProductDetail = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="mb-4 font-display text-3xl font-bold text-foreground md:text-4xl">
+            <h1 className="mb-3 sm:mb-4 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
               {product.title}
             </h1>
             <p className="mb-6 font-body text-base leading-relaxed text-muted-foreground">
