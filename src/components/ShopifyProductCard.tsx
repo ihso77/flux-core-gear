@@ -139,7 +139,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
       {/* Info section */}
       <div className="flex flex-1 flex-col justify-between gap-2 sm:gap-3 p-3 sm:p-5">
         <div>
-          <h3 className="font-display text-sm font-semibold text-foreground line-clamp-1 transition-colors duration-300 group-hover:text-primary">
+          <h3 className="font-display text-xs sm:text-sm font-semibold text-foreground line-clamp-1 transition-colors duration-300 group-hover:text-primary">
             {node.title}
           </h3>
           {node.description && (
