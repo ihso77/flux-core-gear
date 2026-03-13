@@ -162,7 +162,7 @@ const FeaturesSection = () => {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-20 text-center"
+          className="mb-12 sm:mb-20 text-center"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
