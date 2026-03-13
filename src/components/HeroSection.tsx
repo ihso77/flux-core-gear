@@ -240,12 +240,12 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Hero image with mouse parallax */}
+        {/* Hero image with mouse parallax - hidden on small mobile */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85, rotateY: -20, filter: "blur(20px)" }}
           animate={{ opacity: 1, scale: 1, rotateY: 0, filter: "blur(0px)" }}
           transition={{ duration: 1.4, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative flex items-center justify-center"
+          className="relative hidden sm:flex items-center justify-center"
           style={{ perspective: 1200 }}
         >
           <motion.div
