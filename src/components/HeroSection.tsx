@@ -168,7 +168,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-10 max-w-md font-body text-lg leading-relaxed text-muted-foreground"
+            className="mb-8 max-w-md font-body text-base leading-relaxed text-muted-foreground sm:text-lg sm:mb-10"
           >
             Performance peripherals designed for those who demand excellence.
             Every detail engineered for victory.
