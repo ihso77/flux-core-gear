@@ -151,7 +151,7 @@ const FeaturesSection = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <section id="collections" className="relative overflow-hidden bg-background py-32">
+    <section id="collections" className="relative overflow-hidden bg-background py-16 sm:py-32">
       {/* Background decorations */}
       <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] bg-primary/[0.03] blur-[180px]" />
       <div className="pointer-events-none absolute left-0 bottom-0 h-[400px] w-[400px] bg-primary/[0.02] blur-[150px]" />
@@ -162,7 +162,7 @@ const FeaturesSection = () => {
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-20 text-center"
+          className="mb-12 sm:mb-20 text-center"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -183,7 +183,7 @@ const FeaturesSection = () => {
           </motion.div>
 
           <motion.h2
-            className="font-display text-4xl font-bold text-foreground md:text-5xl"
+            className="font-display text-3xl font-bold text-foreground sm:text-4xl md:text-5xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

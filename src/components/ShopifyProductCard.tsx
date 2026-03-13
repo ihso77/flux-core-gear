@@ -137,13 +137,13 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
       </div>
 
       {/* Info section */}
-      <div className="flex flex-1 flex-col justify-between gap-3 p-5">
+      <div className="flex flex-1 flex-col justify-between gap-2 sm:gap-3 p-3 sm:p-5">
         <div>
-          <h3 className="font-display text-sm font-semibold text-foreground line-clamp-1 transition-colors duration-300 group-hover:text-primary">
+          <h3 className="font-display text-xs sm:text-sm font-semibold text-foreground line-clamp-1 transition-colors duration-300 group-hover:text-primary">
             {node.title}
           </h3>
           {node.description && (
-            <p className="mt-1.5 line-clamp-2 font-body text-xs leading-relaxed text-muted-foreground">
+            <p className="mt-1 line-clamp-2 font-body text-[10px] sm:text-xs leading-relaxed text-muted-foreground">
               {node.description}
             </p>
           )}
@@ -151,7 +151,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
 
         <div className="flex items-center justify-between pt-2 border-t border-border/50">
           <div className="flex flex-col">
-            <span className="font-display text-lg font-bold text-foreground">
+            <span className="font-display text-sm sm:text-lg font-bold text-foreground">
               {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
             </span>
           </div>
@@ -161,7 +161,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
             disabled={isLoading || !variant?.availableForSale}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
-            className="relative flex items-center gap-2 rounded-xl gradient-pulse px-4 py-2.5 font-body text-xs font-semibold text-primary-foreground transition-shadow duration-300 hover:shadow-[0_0_25px_hsl(271_81%_56%/0.5)] disabled:opacity-50 overflow-hidden"
+            className="relative flex items-center gap-1.5 sm:gap-2 rounded-xl gradient-pulse px-3 py-2 sm:px-4 sm:py-2.5 font-body text-[10px] sm:text-xs font-semibold text-primary-foreground transition-shadow duration-300 hover:shadow-[0_0_25px_hsl(271_81%_56%/0.5)] disabled:opacity-50 overflow-hidden"
           >
             {/* Animated shimmer */}
             <motion.span

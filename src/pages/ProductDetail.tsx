@@ -64,7 +64,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-24">
+    <div className="min-h-screen bg-background pt-20 pb-12 sm:pt-24">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
@@ -76,7 +76,7 @@ const ProductDetail = () => {
           Back
         </motion.button>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
           {/* Images */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -119,15 +119,15 @@ const ProductDetail = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="mb-4 font-display text-3xl font-bold text-foreground md:text-4xl">
+            <h1 className="mb-3 sm:mb-4 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
               {product.title}
             </h1>
-            <p className="mb-6 font-body text-base leading-relaxed text-muted-foreground">
+            <p className="mb-4 sm:mb-6 font-body text-sm sm:text-base leading-relaxed text-muted-foreground">
               {product.description}
             </p>
 
             {variant && (
-              <p className="mb-8 font-display text-3xl font-bold text-foreground">
+              <p className="mb-6 sm:mb-8 font-display text-2xl sm:text-3xl font-bold text-foreground">
                 {variant.price.currencyCode} {parseFloat(variant.price.amount).toFixed(2)}
               </p>
             )}

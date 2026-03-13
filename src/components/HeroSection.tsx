@@ -116,7 +116,7 @@ const HeroSection = () => {
 
       <motion.div
         style={{ y, opacity, scale }}
-        className="container relative mx-auto grid items-center gap-12 px-4 pt-20 lg:grid-cols-2 lg:gap-0 lg:px-8"
+        className="container relative mx-auto grid items-center gap-8 px-4 pt-24 sm:pt-20 lg:grid-cols-2 lg:gap-0 lg:px-8"
       >
         <div>
           <motion.div
@@ -138,7 +138,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6 font-display text-6xl font-bold leading-[1.05] text-foreground md:text-8xl"
+            className="mb-6 font-display text-4xl font-bold leading-[1.05] text-foreground sm:text-5xl md:text-8xl"
           >
             Elevate
             <br />
@@ -168,7 +168,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-10 max-w-md font-body text-lg leading-relaxed text-muted-foreground"
+            className="mb-8 max-w-md font-body text-base leading-relaxed text-muted-foreground sm:text-lg sm:mb-10"
           >
             Performance peripherals designed for those who demand excellence.
             Every detail engineered for victory.
@@ -182,7 +182,7 @@ const HeroSection = () => {
           >
             <motion.a
               href="#shop"
-              className="group relative inline-flex items-center gap-2 rounded-2xl gradient-pulse px-8 py-4 font-body text-sm font-semibold text-primary-foreground transition-all duration-300 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 rounded-2xl gradient-pulse px-6 py-3 sm:px-8 sm:py-4 font-body text-sm font-semibold text-primary-foreground transition-all duration-300 overflow-hidden"
               whileHover={{ scale: 1.04, boxShadow: "0 0 40px hsl(271 81% 56% / 0.4)" }}
               whileTap={{ scale: 0.97 }}
             >
@@ -200,7 +200,7 @@ const HeroSection = () => {
 
             <motion.a
               href="#collections"
-              className="group relative inline-flex items-center gap-2 rounded-2xl border border-border px-8 py-4 font-body text-sm font-semibold text-foreground transition-all duration-500 hover:border-primary/50 hover:bg-primary/5 overflow-hidden"
+              className="group relative inline-flex items-center gap-2 rounded-2xl border border-border px-6 py-3 sm:px-8 sm:py-4 font-body text-sm font-semibold text-foreground transition-all duration-500 hover:border-primary/50 hover:bg-primary/5 overflow-hidden"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -214,7 +214,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-14 flex gap-10"
+            className="mt-10 flex gap-6 sm:gap-10 sm:mt-14"
           >
             {[
               { value: "1ms", label: "Response Time" },
@@ -229,7 +229,7 @@ const HeroSection = () => {
                 className="text-left group"
               >
                 <motion.div
-                  className="font-display text-2xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary"
+                  className="font-display text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary sm:text-2xl"
                   whileHover={{ scale: 1.1 }}
                 >
                   {stat.value}
@@ -240,12 +240,12 @@ const HeroSection = () => {
           </motion.div>
         </div>
 
-        {/* Hero image with mouse parallax */}
+        {/* Hero image with mouse parallax - hidden on small mobile */}
         <motion.div
           initial={{ opacity: 0, scale: 0.85, rotateY: -20, filter: "blur(20px)" }}
           animate={{ opacity: 1, scale: 1, rotateY: 0, filter: "blur(0px)" }}
           transition={{ duration: 1.4, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative flex items-center justify-center"
+          className="relative hidden sm:flex items-center justify-center"
           style={{ perspective: 1200 }}
         >
           <motion.div
@@ -285,7 +285,7 @@ const HeroSection = () => {
 
             {/* Floating badges with glassmorphism */}
             <motion.div
-              className="absolute -right-6 top-1/4 flex items-center gap-2 rounded-2xl bg-card/60 backdrop-blur-xl border border-border/50 px-4 py-2 shadow-2xl"
+              className="absolute -right-2 sm:-right-6 top-1/4 flex items-center gap-2 rounded-2xl bg-card/60 backdrop-blur-xl border border-border/50 px-3 py-1.5 sm:px-4 sm:py-2 shadow-2xl"
               animate={{ y: [0, -12, 0], x: [0, 5, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
             >
@@ -294,7 +294,7 @@ const HeroSection = () => {
             </motion.div>
 
             <motion.div
-              className="absolute -left-6 bottom-1/4 flex items-center gap-2 rounded-2xl bg-primary/15 backdrop-blur-xl border border-primary/25 px-4 py-2"
+              className="absolute -left-2 sm:-left-6 bottom-1/4 flex items-center gap-2 rounded-2xl bg-primary/15 backdrop-blur-xl border border-primary/25 px-3 py-1.5 sm:px-4 sm:py-2"
               animate={{ y: [0, 12, 0], x: [0, -5, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             >

@@ -36,7 +36,7 @@ const Footer = () => {
   };
 
   return (
-    <footer id="about" className="relative border-t border-border bg-background py-16 overflow-hidden">
+    <footer id="about" className="relative border-t border-border bg-background py-10 sm:py-16 overflow-hidden">
       {/* Background glow effect */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[600px] -translate-x-1/2 -translate-y-1/2 bg-primary/5 blur-[150px] rounded-full" />
       

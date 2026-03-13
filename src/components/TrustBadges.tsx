@@ -26,9 +26,9 @@ const badges = [
 
 const TrustBadges = () => {
   return (
-    <section className="relative border-y border-border bg-card/30 py-16">
+    <section className="relative border-y border-border bg-card/30 py-10 sm:py-16">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
           {badges.map((badge, i) => (
             <motion.div
               key={badge.title}
@@ -37,12 +37,12 @@ const TrustBadges = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -5, scale: 1.02 }}
-              className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-card/50 transition-all duration-500"
+              className="group flex flex-col items-center text-center gap-2 sm:gap-3 p-4 sm:p-6 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-card/50 transition-all duration-500"
             >
               <motion.div
                 whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
                 transition={{ duration: 0.5 }}
-                className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500"
+                className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500"
               >
                 <badge.icon className="h-6 w-6" />
               </motion.div>

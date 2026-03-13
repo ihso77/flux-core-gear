@@ -19,7 +19,7 @@ const NewsletterSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden py-24">
+    <section className="relative overflow-hidden py-16 sm:py-24">
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/[0.03] to-background" />
       <motion.div
@@ -53,7 +53,7 @@ const NewsletterSection = () => {
             </span>
           </motion.div>
 
-          <h2 className="font-display text-3xl font-bold text-foreground md:text-4xl mb-4">
+          <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl mb-4">
             Join the{" "}
             <span className="text-gradient-pulse">Nova</span>{" "}
             Community

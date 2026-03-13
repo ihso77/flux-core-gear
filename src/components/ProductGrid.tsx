@@ -88,7 +88,7 @@ const ProductGrid = () => {
   const activeCategoryData = categories.find(c => c.id === activeCategory);
 
   return (
-    <section id="shop" className="relative bg-background py-32">
+    <section id="shop" className="relative bg-background py-16 sm:py-32">
       {/* Background decoration */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 bg-primary/3 blur-[150px] rounded-full" />
 
@@ -119,7 +119,7 @@ const ProductGrid = () => {
             </p>
           </motion.div>
           
-          <h2 className="font-display text-4xl font-bold text-foreground md:text-5xl mb-4">
+          <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl md:text-5xl mb-4">
             Shop the{" "}
             <motion.span
               className="text-gradient-pulse inline-block"
@@ -294,9 +294,9 @@ const ProductGrid = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={`grid gap-6 ${
+              className={`grid gap-4 sm:gap-6 ${
                 viewMode === "grid" 
-                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
+                  ? "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
                   : "grid-cols-1 md:grid-cols-2"
               }`}
             >

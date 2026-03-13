@@ -108,7 +108,7 @@ const VideoSection = () => {
   ];
 
   return (
-    <section className="relative py-32 overflow-hidden">
+    <section className="relative py-16 sm:py-32 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-card/50 to-background" />
       
@@ -133,7 +133,7 @@ const VideoSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <motion.span
             initial={{ opacity: 0, scale: 0.5 }}
@@ -150,7 +150,7 @@ const VideoSection = () => {
             Watch Our Story
           </motion.span>
           
-          <h2 className="font-display text-4xl font-bold text-foreground md:text-5xl mb-4">
+          <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl md:text-5xl mb-4">
             Experience{" "}
             <motion.span
               className="text-gradient-pulse inline-block"
@@ -237,9 +237,9 @@ const VideoSection = () => {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative z-10 flex h-24 w-24 items-center justify-center rounded-full gradient-pulse shadow-lg shadow-primary/30"
+                    className="relative z-10 flex h-16 w-16 sm:h-24 sm:w-24 items-center justify-center rounded-full gradient-pulse shadow-lg shadow-primary/30"
                   >
-                    <Play className="h-10 w-10 text-primary-foreground ml-1" />
+                    <Play className="h-6 w-6 sm:h-10 sm:w-10 text-primary-foreground ml-0.5" />
                   </motion.button>
                 </motion.div>
               </div>
@@ -304,7 +304,7 @@ const VideoSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+          className="mt-10 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 max-w-4xl mx-auto"
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -314,10 +314,10 @@ const VideoSection = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.5 + index * 0.1 }}
               whileHover={{ scale: 1.05, y: -5 }}
-              className="text-center p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors"
+              className="text-center p-4 sm:p-6 rounded-xl border border-border bg-card/50 backdrop-blur-sm hover:border-primary/30 transition-colors"
             >
               <motion.div
-                className="font-display text-3xl font-bold text-foreground mb-1"
+                className="font-display text-2xl sm:text-3xl font-bold text-foreground mb-1"
                 whileHover={{ color: "hsl(271, 81%, 56%)" }}
               >
                 {stat.value}
