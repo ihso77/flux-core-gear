@@ -294,7 +294,7 @@ const HeroSection = () => {
             </motion.div>
 
             <motion.div
-              className="absolute -left-6 bottom-1/4 flex items-center gap-2 rounded-2xl bg-primary/15 backdrop-blur-xl border border-primary/25 px-4 py-2"
+              className="absolute -left-2 sm:-left-6 bottom-1/4 flex items-center gap-2 rounded-2xl bg-primary/15 backdrop-blur-xl border border-primary/25 px-3 py-1.5 sm:px-4 sm:py-2"
               animate={{ y: [0, 12, 0], x: [0, -5, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
             >
