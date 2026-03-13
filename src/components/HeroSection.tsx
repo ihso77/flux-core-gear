@@ -138,7 +138,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 50, filter: "blur(10px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6 font-display text-6xl font-bold leading-[1.05] text-foreground md:text-8xl"
+            className="mb-6 font-display text-4xl font-bold leading-[1.05] text-foreground sm:text-5xl md:text-8xl"
           >
             Elevate
             <br />
