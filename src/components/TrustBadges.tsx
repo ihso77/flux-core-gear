@@ -37,7 +37,7 @@ const TrustBadges = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -5, scale: 1.02 }}
-              className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-card/50 transition-all duration-500"
+              className="group flex flex-col items-center text-center gap-2 sm:gap-3 p-4 sm:p-6 rounded-2xl border border-transparent hover:border-primary/20 hover:bg-card/50 transition-all duration-500"
             >
               <motion.div
                 whileHover={{ rotate: [0, -10, 10, 0], scale: 1.15 }}
