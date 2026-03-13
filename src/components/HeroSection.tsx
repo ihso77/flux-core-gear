@@ -214,7 +214,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-14 flex gap-10"
+            className="mt-10 flex gap-6 sm:gap-10 sm:mt-14"
           >
             {[
               { value: "1ms", label: "Response Time" },
