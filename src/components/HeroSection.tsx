@@ -116,7 +116,7 @@ const HeroSection = () => {
 
       <motion.div
         style={{ y, opacity, scale }}
-        className="container relative mx-auto grid items-center gap-12 px-4 pt-20 lg:grid-cols-2 lg:gap-0 lg:px-8"
+        className="container relative mx-auto grid items-center gap-8 px-4 pt-24 sm:pt-20 lg:grid-cols-2 lg:gap-0 lg:px-8"
       >
         <div>
           <motion.div
