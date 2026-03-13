@@ -151,7 +151,7 @@ const FeaturesSection = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   return (
-    <section id="collections" className="relative overflow-hidden bg-background py-32">
+    <section id="collections" className="relative overflow-hidden bg-background py-16 sm:py-32">
       {/* Background decorations */}
       <div className="pointer-events-none absolute right-0 top-0 h-[500px] w-[500px] bg-primary/[0.03] blur-[180px]" />
       <div className="pointer-events-none absolute left-0 bottom-0 h-[400px] w-[400px] bg-primary/[0.02] blur-[150px]" />
