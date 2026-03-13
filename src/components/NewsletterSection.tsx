@@ -19,7 +19,7 @@ const NewsletterSection = () => {
   };
 
   return (
-    <section className="relative overflow-hidden py-24">
+    <section className="relative overflow-hidden py-16 sm:py-24">
       {/* Animated background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/[0.03] to-background" />
       <motion.div
