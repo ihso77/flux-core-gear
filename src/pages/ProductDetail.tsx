@@ -64,7 +64,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-24">
+    <div className="min-h-screen bg-background pt-20 pb-12 sm:pt-24">
       <div className="container mx-auto px-4 lg:px-8">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
