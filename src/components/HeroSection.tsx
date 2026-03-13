@@ -229,7 +229,7 @@ const HeroSection = () => {
                 className="text-left group"
               >
                 <motion.div
-                  className="font-display text-2xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary"
+                  className="font-display text-xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary sm:text-2xl"
                   whileHover={{ scale: 1.1 }}
                 >
                   {stat.value}
