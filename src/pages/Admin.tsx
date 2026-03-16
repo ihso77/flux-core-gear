@@ -127,14 +127,14 @@ const Admin = () => {
     }
   };
 
-  // Initial fetch and polling
+  // Initial fetch and polling - update every 1 second
   useEffect(() => {
     if (!isAdmin) return;
 
     fetchOnlineUsers();
     fetchStats();
 
-    const interval = setInterval(fetchOnlineUsers, 10000); // Every 10 seconds
+    const interval = setInterval(fetchOnlineUsers, 1000); // Every 1 second
     return () => clearInterval(interval);
   }, [isAdmin]);
 

@@ -301,18 +301,18 @@ export const CART_LINES_REMOVE_MUTATION = `
 function formatCheckoutUrl(checkoutUrl: string): string {
   try {
     const url = new URL(checkoutUrl);
-    // Always use Shopify's default domain for checkout to avoid 404 errors
-    // The custom domain may not be properly configured
-    url.searchParams.set('channel', 'online_store');
     
-    // If using a custom domain that might not be active, redirect to Shopify's domain
-    if (!url.hostname.includes('myshopify.com') && !url.hostname.includes('shopify.com')) {
-      // Extract the checkout path and reconstruct with Shopify domain
-      const shopifyDomain = SHOPIFY_STORE_PERMANENT_DOMAIN;
-      url.hostname = shopifyDomain;
-    }
+    // Extract the checkout path (e.g., /cart/c/abc123)
+    const checkoutPath = url.pathname;
+    const searchParams = url.search;
     
-    return url.toString();
+    // Use custom checkout domain
+    const customCheckoutDomain = 'checkout.nova-store.dev';
+    
+    // Reconstruct URL with custom domain
+    const formattedUrl = `https://${customCheckoutDomain}${checkoutPath}${searchParams}`;
+    
+    return formattedUrl;
   } catch {
     return checkoutUrl;
   }

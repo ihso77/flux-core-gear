@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
 import { supabase, Profile } from '@/lib/supabase';
 import { Session, User } from '@supabase/supabase-js';
 
@@ -17,6 +17,24 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Helper to set a cookie
+const setCookie = (name: string, value: string, days: number = 365) => {
+  const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
+  document.cookie = `${name}=${value}; path=/; expires=${expires}; SameSite=Lax; Secure`;
+};
+
+// Helper to get a cookie
+const getCookie = (name: string): string | null => {
+  const cookies = document.cookie.split(';');
+  const cookie = cookies.find(c => c.trim().startsWith(`${name}=`));
+  return cookie ? cookie.split('=')[1].trim() : null;
+};
+
+// Helper to delete a cookie
+const deleteCookie = (name: string) => {
+  document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -24,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Fetch profile data
-  const fetchProfile = async (userId: string): Promise<Profile | null> => {
+  const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -41,26 +59,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('Error fetching profile:', error);
       return null;
     }
-  };
+  }, []);
 
   // Create profile if it doesn't exist
-  const createProfileIfMissing = async (userId: string, email: string, fullName?: string) => {
+  const createProfileIfMissing = useCallback(async (userId: string, email: string, fullName?: string) => {
     try {
-      // Check if profile exists
       const { data: existingProfile } = await supabase
         .from('profiles')
-        .select('id')
+        .select('id, full_name')
         .eq('id', userId)
         .maybeSingle();
 
       if (!existingProfile) {
-        // Create profile manually
+        const name = fullName || email.split('@')[0];
         const { error } = await supabase
           .from('profiles')
           .insert({
             id: userId,
             email: email,
-            full_name: fullName || email.split('@')[0],
+            full_name: name,
             role: 'customer',
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
@@ -68,52 +85,65 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (error) {
           console.error('Error creating profile:', error);
+        } else {
+          // Store the name in a cookie for persistence
+          setCookie('nova_user_name', name);
+          setCookie('nova_user_email', email);
         }
       } else if (fullName && !existingProfile.full_name) {
-        // Update profile with full_name if missing
         await supabase
           .from('profiles')
           .update({ full_name: fullName, updated_at: new Date().toISOString() })
           .eq('id', userId);
+        setCookie('nova_user_name', fullName);
       }
     } catch (error) {
       console.error('Error in createProfileIfMissing:', error);
     }
-  };
+  }, []);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (user?.id) {
       const profileData = await fetchProfile(user.id);
       setProfile(profileData);
     }
-  };
+  }, [user?.id, fetchProfile]);
 
   useEffect(() => {
     let mounted = true;
 
-    // Get initial session
+    // Initialize auth with stored session
     const initializeAuth = async () => {
       try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        // Check for existing session
+        const { data: { session: existingSession } } = await supabase.auth.getSession();
         
         if (!mounted) return;
 
-        setSession(initialSession);
-        setUser(initialSession?.user ?? null);
-
-        if (initialSession?.user) {
-          // Create profile if missing
-          const fullName = initialSession.user.user_metadata?.full_name;
+        if (existingSession?.user) {
+          setSession(existingSession);
+          setUser(existingSession.user);
+          
+          // Get stored name from cookie
+          const storedName = getCookie('nova_user_name');
+          const fullName = existingSession.user.user_metadata?.full_name || storedName || undefined;
+          
+          // Create/update profile
           await createProfileIfMissing(
-            initialSession.user.id,
-            initialSession.user.email || '',
+            existingSession.user.id,
+            existingSession.user.email || '',
             fullName
           );
           
-          const profileData = await fetchProfile(initialSession.user.id);
+          const profileData = await fetchProfile(existingSession.user.id);
           if (mounted) {
             setProfile(profileData);
           }
+        } else {
+          // No session, clear user state
+          setUser(null);
+          setProfile(null);
+          setSession(null);
         }
 
         setLoading(false);
@@ -133,10 +163,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(newSession?.user ?? null);
 
       if (newSession?.user) {
-        const fullName = newSession.user.user_metadata?.full_name;
+        const storedName = getCookie('nova_user_name');
+        const fullName = newSession.user.user_metadata?.full_name || storedName || undefined;
         
         // On sign up, create profile
-        if (event === 'SIGNED_UP') {
+        if (event === 'SIGNED_UP' || event === 'SIGNED_IN') {
           await createProfileIfMissing(
             newSession.user.id,
             newSession.user.email || '',
@@ -150,6 +181,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setProfile(null);
+        // Clear cookies on sign out
+        if (event === 'SIGNED_OUT') {
+          deleteCookie('nova_user_name');
+          deleteCookie('nova_user_email');
+        }
       }
 
       setLoading(false);
@@ -159,7 +195,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [fetchProfile, createProfileIfMissing]);
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -167,6 +203,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
       });
+      
+      if (!error) {
+        setCookie('nova_user_email', email);
+      }
+      
       return { error: error as Error | null };
     } catch (error) {
       return { error: error as Error };
@@ -175,15 +216,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     try {
+      const name = fullName || email.split('@')[0];
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            full_name: fullName || email.split('@')[0],
+            full_name: name,
           },
         },
       });
+      
+      if (!error) {
+        setCookie('nova_user_name', name);
+        setCookie('nova_user_email', email);
+      }
+      
       return { error: error as Error | null };
     } catch (error) {
       return { error: error as Error };
@@ -195,10 +243,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setProfile(null);
     setSession(null);
-    // Clear local storage
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('nova-auth-token');
-    }
+    
+    // Clear all auth cookies
+    deleteCookie('nova_user_name');
+    deleteCookie('nova_user_email');
+    deleteCookie('nova_session_id');
+    
+    // Clear localStorage
+    localStorage.removeItem('nova-auth-token');
+    localStorage.removeItem('nova_session_id');
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
@@ -215,6 +268,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (!error) {
         setProfile(prev => prev ? { ...prev, ...updates } : null);
+        // Update cookie if name changed
+        if (updates.full_name) {
+          setCookie('nova_user_name', updates.full_name);
+        }
       }
 
       return { error };

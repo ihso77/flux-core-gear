@@ -16,13 +16,29 @@ interface OnlineStats {
   recentUsers: OnlineUser[];
 }
 
-// Generate or get anonymous session ID
+// Generate or get anonymous session ID (persisted in cookies)
 const getSessionId = (): string => {
+  // Check localStorage first
   let sessionId = localStorage.getItem('nova_session_id');
+  
+  // Check cookies as backup
+  if (!sessionId) {
+    const cookies = document.cookie.split(';');
+    const sessionCookie = cookies.find(c => c.trim().startsWith('nova_session='));
+    if (sessionCookie) {
+      sessionId = sessionCookie.split('=')[1].trim();
+    }
+  }
+  
+  // Create new session if none exists
   if (!sessionId) {
     sessionId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Save to localStorage
     localStorage.setItem('nova_session_id', sessionId);
+    // Also save to cookie (expires in 30 days)
+    document.cookie = `nova_session=${sessionId}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
   }
+  
   return sessionId;
 };
 
@@ -40,7 +56,6 @@ export function useOnlineUsers() {
     const sessionId = getSessionId();
     
     try {
-      // Use Supabase presence or simple heartbeat
       await supabase.from('online_presence').upsert({
         user_id: userId || null,
         session_id: sessionId,
@@ -49,7 +64,6 @@ export function useOnlineUsers() {
         user_agent: navigator.userAgent
       }, { onConflict: 'session_id' });
     } catch (error) {
-      // Table might not exist, silently fail
       console.debug('Presence update failed:', error);
     }
   }, []);
@@ -57,7 +71,6 @@ export function useOnlineUsers() {
   // Fetch online stats
   const fetchStats = useCallback(async () => {
     try {
-      // Get users active in last 5 minutes
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
       
       const { data, error } = await supabase
@@ -92,7 +105,6 @@ export function useOnlineUsers() {
       });
     } catch (error) {
       console.debug('Failed to fetch online stats:', error);
-      // Return simulated stats if table doesn't exist
       setStats({
         totalOnline: Math.floor(Math.random() * 10) + 3,
         authenticatedUsers: Math.floor(Math.random() * 5),
@@ -107,7 +119,7 @@ export function useOnlineUsers() {
   return { stats, loading, updatePresence, fetchStats };
 }
 
-// Hook to track current user's presence
+// Hook to track current user's presence - updates every 800ms
 export function usePresenceTracker(userId?: string) {
   const updatePresence = useCallback(async () => {
     const sessionId = getSessionId();
@@ -128,8 +140,8 @@ export function usePresenceTracker(userId?: string) {
     // Update immediately
     updatePresence();
 
-    // Update every 30 seconds
-    const interval = setInterval(updatePresence, 30000);
+    // Update every 800ms (less than 1 second)
+    const interval = setInterval(updatePresence, 800);
 
     // Update on visibility change
     const handleVisibility = () => {

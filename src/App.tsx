@@ -32,7 +32,6 @@ const AppContent = () => {
     <>
       <Routes>
         <Route path="/" element={<Index />} />
-        <Route path="/:id" element={<ProductDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/profile" element={<Profile />} />
@@ -41,6 +40,9 @@ const AppContent = () => {
         <Route path="/about" element={<About />} />
         <Route path="/collections" element={<Collections />} />
         <Route path="/admin" element={<Admin />} />
+        {/* Product route - uses numeric ID */}
+        <Route path="/product/:id" element={<ProductDetail />} />
+        {/* 404 for all other routes */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <AIChatWidget />

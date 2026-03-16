@@ -78,7 +78,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
       style={{ rotateX, rotateY, transformPerspective: 1200 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={() => navigate(`/${productId}`)}
+      onClick={() => navigate(`/product/${productId}`)}
       className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:border-primary/40 hover:shadow-[0_20px_60px_-15px_hsl(271_81%_56%/0.25)] will-change-transform"
     >
       {/* Category badge - auto-detected */}
@@ -130,7 +130,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
             whileTap={{ scale: 0.9 }}
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/${productId}`);
+              navigate(`/product/${productId}`);
             }}
             className="flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-sm border border-border px-4 py-2.5 font-body text-xs font-medium text-foreground shadow-lg hover:bg-card transition-colors"
           >

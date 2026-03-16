@@ -3,14 +3,56 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = 'https://lipthpnciloarvfwfmfe.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpcHRocG5jaWxvYXJ2ZndmbWZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNTQ1NzUsImV4cCI6MjA4ODczMDU3NX0.NtYuldnqUin0Zzw7zNDekB_wHiyCiEOFdHYwOejw-3E';
 
-// Configure Supabase with persistent session
+// Custom cookie-based storage adapter for better session persistence
+const cookieStorage = {
+  getItem: (key: string): string | null => {
+    // Try localStorage first (faster)
+    try {
+      const localValue = localStorage.getItem(key);
+      if (localValue) return localValue;
+    } catch (e) {
+      // localStorage not available
+    }
+    
+    // Fall back to cookies
+    const cookies = document.cookie.split(';');
+    const cookie = cookies.find(c => c.trim().startsWith(`${key}=`));
+    return cookie ? decodeURIComponent(cookie.split('=')[1].trim()) : null;
+  },
+  setItem: (key: string, value: string): void => {
+    // Save to localStorage
+    try {
+      localStorage.setItem(key, value);
+    } catch (e) {
+      // localStorage not available
+    }
+    
+    // Also save to cookie for cross-tab persistence (expires in 1 year)
+    const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+    document.cookie = `${key}=${encodeURIComponent(value)}; path=/; expires=${expires}; SameSite=Lax`;
+  },
+  removeItem: (key: string): void => {
+    // Remove from localStorage
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      // localStorage not available
+    }
+    
+    // Remove cookie
+    document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+  },
+};
+
+// Configure Supabase with persistent session using cookies
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+    storage: typeof window !== 'undefined' ? cookieStorage : undefined,
     storageKey: 'nova-auth-token',
+    flowType: 'pkce',
   },
 });
 
