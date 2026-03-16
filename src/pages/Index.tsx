@@ -8,10 +8,12 @@ import TrustBadges from "@/components/TrustBadges";
 import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import SEOHead from "@/components/SEOHead";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead />
       <Navbar />
       <HeroSection />
       <MarqueeBanner />

@@ -18,8 +18,8 @@ const categories = [
 
 const navLinks = [
   { label: "Shop", href: "#shop", hasDropdown: true },
-  { label: "Collections", href: "#collections" },
-  { label: "About", href: "#about" },
+  { label: "Collections", href: "/collections" },
+  { label: "About", href: "/about" },
 ];
 
 const Navbar = () => {
@@ -118,6 +118,23 @@ const Navbar = () => {
                     style={{ transformOrigin: "left" }}
                   />
                 </motion.button>
+              ) : link.href.startsWith("/") ? (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.5 }}
+                >
+                  <Link
+                    to={link.href}
+                    className="relative font-body text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
+                  >
+                    {link.label}
+                    <motion.span
+                      className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
+                      style={{ transformOrigin: "left" }}
+                    />
+                  </Link>
+                </motion.div>
               ) : (
                 <motion.a
                   href={link.href}
@@ -392,17 +409,34 @@ const Navbar = () => {
               {/* Nav Links */}
               <div className="space-y-1">
                 {navLinks.map((link, index) => (
-                  <motion.a
-                    key={link.label}
-                    href={link.href}
-                    className="block font-body text-lg text-muted-foreground transition-colors hover:text-foreground py-2"
-                    onClick={() => setMobileOpen(false)}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.3 + index * 0.1 }}
-                  >
-                    {link.label}
-                  </motion.a>
+                  link.href.startsWith("/") ? (
+                    <motion.div
+                      key={link.label}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 + index * 0.1 }}
+                    >
+                      <Link
+                        to={link.href}
+                        className="block font-body text-lg text-muted-foreground transition-colors hover:text-foreground py-2"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    </motion.div>
+                  ) : (
+                    <motion.a
+                      key={link.label}
+                      href={link.href}
+                      className="block font-body text-lg text-muted-foreground transition-colors hover:text-foreground py-2"
+                      onClick={() => setMobileOpen(false)}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 + index * 0.1 }}
+                    >
+                      {link.label}
+                    </motion.a>
+                  )
                 ))}
               </div>
             </div>
