@@ -56,13 +56,16 @@ const Signup = () => {
 
     setIsLoading(true);
     const { error } = await signUp(email, password, fullName);
-    setIsLoading(false);
 
     if (error) {
       toast.error(error.message || "Failed to create account");
+      setIsLoading(false);
     } else {
-      toast.success("Account created! Please check your email to verify.");
-      navigate("/login");
+      toast.success("Account created successfully! Welcome to Nova!");
+      // Navigate directly to home page - user is now logged in
+      setTimeout(() => {
+        navigate("/");
+      }, 500);
     }
   };
 
