@@ -18,8 +18,8 @@ const categories = [
 
 const navLinks = [
   { label: "Shop", href: "#shop", hasDropdown: true },
-  { label: "Collections", href: "#collections" },
-  { label: "About", href: "#about" },
+  { label: "Collections", href: "/collections" },
+  { label: "About", href: "/about" },
 ];
 
 const Navbar = () => {
