@@ -118,6 +118,23 @@ const Navbar = () => {
                     style={{ transformOrigin: "left" }}
                   />
                 </motion.button>
+              ) : link.href.startsWith("/") ? (
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.5 }}
+                >
+                  <Link
+                    to={link.href}
+                    className="relative font-body text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
+                  >
+                    {link.label}
+                    <motion.span
+                      className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
+                      style={{ transformOrigin: "left" }}
+                    />
+                  </Link>
+                </motion.div>
               ) : (
                 <motion.a
                   href={link.href}
