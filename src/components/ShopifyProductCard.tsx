@@ -4,6 +4,7 @@ import { useCartStore, type ShopifyProduct } from "@/stores/cartStore";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { autoCategorize, getCategoryLabel } from "@/lib/autoCategory";
+import { extractProductId } from "@/lib/shopify";
 import { useRef } from "react";
 
 interface ShopifyProductCardProps {
@@ -20,6 +21,9 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
   const price = node.priceRange.minVariantPrice;
   const variant = node.variants.edges[0]?.node;
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Get numeric product ID for URL
+  const productId = extractProductId(node.id);
 
   // Auto-categorize the product
   const detectedCategory = autoCategorize(node.title, node.description);
@@ -74,7 +78,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
       style={{ rotateX, rotateY, transformPerspective: 1200 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={() => navigate(`/product/${node.handle}`)}
+      onClick={() => navigate(`/${productId}`)}
       className="group relative flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:border-primary/40 hover:shadow-[0_20px_60px_-15px_hsl(271_81%_56%/0.25)] will-change-transform"
     >
       {/* Category badge - auto-detected */}
@@ -126,7 +130,7 @@ const ShopifyProductCard = ({ product, index }: ShopifyProductCardProps) => {
             whileTap={{ scale: 0.9 }}
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/product/${node.handle}`);
+              navigate(`/${productId}`);
             }}
             className="flex items-center gap-2 rounded-full bg-card/90 backdrop-blur-sm border border-border px-4 py-2.5 font-body text-xs font-medium text-foreground shadow-lg hover:bg-card transition-colors"
           >

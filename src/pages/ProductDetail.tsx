@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Loader2, ShoppingCart, Check } from "lucide-react";
-import { fetchProductByHandle, type ShopifyProduct } from "@/lib/shopify";
+import { fetchProductById, type ShopifyProduct } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 
 const ProductDetail = () => {
-  const { handle } = useParams<{ handle: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [product, setProduct] = useState<ShopifyProduct["node"] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,13 +18,13 @@ const ProductDetail = () => {
   const isLoading = useCartStore(s => s.isLoading);
 
   useEffect(() => {
-    if (!handle) return;
+    if (!id) return;
     setLoading(true);
-    fetchProductByHandle(handle)
+    fetchProductById(id)
       .then(setProduct)
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [handle]);
+  }, [id]);
 
   if (loading) {
     return (

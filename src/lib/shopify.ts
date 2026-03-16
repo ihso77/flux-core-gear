@@ -173,6 +173,54 @@ const PRODUCT_BY_HANDLE_QUERY = `
   }
 `;
 
+const PRODUCT_BY_ID_QUERY = `
+  query GetProductById($id: ID!) {
+    node(id: $id) {
+      ... on Product {
+        id
+        title
+        description
+        handle
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        images(first: 10) {
+          edges {
+            node {
+              url
+              altText
+            }
+          }
+        }
+        variants(first: 20) {
+          edges {
+            node {
+              id
+              title
+              price {
+                amount
+                currencyCode
+              }
+              availableForSale
+              selectedOptions {
+                name
+                value
+              }
+            }
+          }
+        }
+        options {
+          name
+          values
+        }
+      }
+    }
+  }
+`;
+
 export async function fetchProducts(first = 20, query?: string): Promise<ShopifyProduct[]> {
   const data = await storefrontApiRequest(PRODUCTS_QUERY, { first, query: query || null });
   return data?.data?.products?.edges || [];
@@ -181,6 +229,23 @@ export async function fetchProducts(first = 20, query?: string): Promise<Shopify
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct["node"] | null> {
   const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
   return data?.data?.productByHandle || null;
+}
+
+// Extract numeric ID from Shopify GID (gid://shopify/Product/123456789 -> 123456789)
+export function extractProductId(gid: string): string {
+  const parts = gid.split('/');
+  return parts[parts.length - 1] || gid;
+}
+
+// Convert numeric ID back to Shopify GID
+export function toShopifyGid(numericId: string): string {
+  return `gid://shopify/Product/${numericId}`;
+}
+
+export async function fetchProductById(numericId: string): Promise<ShopifyProduct["node"] | null> {
+  const gid = toShopifyGid(numericId);
+  const data = await storefrontApiRequest(PRODUCT_BY_ID_QUERY, { id: gid });
+  return data?.data?.node || null;
 }
 
 // Cart mutations
@@ -236,7 +301,17 @@ export const CART_LINES_REMOVE_MUTATION = `
 function formatCheckoutUrl(checkoutUrl: string): string {
   try {
     const url = new URL(checkoutUrl);
+    // Always use Shopify's default domain for checkout to avoid 404 errors
+    // The custom domain may not be properly configured
     url.searchParams.set('channel', 'online_store');
+    
+    // If using a custom domain that might not be active, redirect to Shopify's domain
+    if (!url.hostname.includes('myshopify.com') && !url.hostname.includes('shopify.com')) {
+      // Extract the checkout path and reconstruct with Shopify domain
+      const shopifyDomain = SHOPIFY_STORE_PERMANENT_DOMAIN;
+      url.hostname = shopifyDomain;
+    }
+    
     return url.toString();
   } catch {
     return checkoutUrl;
