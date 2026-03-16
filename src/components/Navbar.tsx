@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ShoppingCart, Menu, X, Search, ChevronDown, Keyboard, Mouse, Headphones, Monitor, Gamepad2, Cable, Package, Sparkles, User, LogOut, Settings } from "lucide-react";
+import { ShoppingCart, Menu, X, Search, ChevronDown, Keyboard, Mouse, Headphones, Monitor, Gamepad2, Cable, Package, Sparkles, User, LogOut, Settings, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CartDrawer from "./CartDrawer";
 import { useAuth } from "@/contexts/AuthContext";
@@ -290,6 +290,16 @@ const Navbar = () => {
                     <Settings className="h-4 w-4" />
                     Settings
                   </Link>
+                  {profile?.role === 'admin' && (
+                    <Link
+                      to="/admin"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors"
+                    >
+                      <Shield className="h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  )}
                   <button
                     onClick={handleSignOut}
                     className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
@@ -390,6 +400,12 @@ const Navbar = () => {
                     <User className="h-4 w-4" />
                     Profile
                   </Link>
+                  {profile?.role === 'admin' && (
+                    <Link to="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-primary hover:text-primary">
+                      <Shield className="h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  )}
                   <button onClick={handleSignOut} className="flex items-center gap-2 py-2 text-red-500">
                     <LogOut className="h-4 w-4" />
                     Sign Out

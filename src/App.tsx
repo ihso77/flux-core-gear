@@ -4,7 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useCartSync } from "@/hooks/useCartSync";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { usePresenceTracker } from "@/hooks/useOnlineUsers";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AIChatWidget from "@/components/AIChatWidget";
 import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
@@ -16,11 +17,17 @@ import ForgotPassword from "./pages/ForgotPassword.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
 import About from "./pages/About.tsx";
 import Collections from "./pages/Collections.tsx";
+import Admin from "./pages/Admin.tsx";
 
 const queryClient = new QueryClient();
 
 const AppContent = () => {
   useCartSync();
+  const { user } = useAuth();
+  
+  // Track user presence for online users feature
+  usePresenceTracker(user?.id);
+  
   return (
     <>
       <Routes>
@@ -33,6 +40,7 @@ const AppContent = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/about" element={<About />} />
         <Route path="/collections" element={<Collections />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <AIChatWidget />

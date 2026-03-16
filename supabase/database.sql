@@ -450,6 +450,43 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 
 -- =============================================
+-- 🌐 ONLINE PRESENCE TABLE (Real-time tracking)
+-- =============================================
+
+CREATE TABLE IF NOT EXISTS public.online_presence (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    session_id VARCHAR(255) UNIQUE NOT NULL,
+    last_seen TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+    page_url TEXT,
+    user_agent TEXT,
+    ip_address VARCHAR(45),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+CREATE INDEX IF NOT EXISTS idx_online_presence_user_id ON public.online_presence(user_id);
+CREATE INDEX IF NOT EXISTS idx_online_presence_last_seen ON public.online_presence(last_seen);
+
+-- Auto-cleanup old presence records (older than 1 hour)
+CREATE OR REPLACE FUNCTION cleanup_old_presence()
+RETURNS void AS $$
+BEGIN
+    DELETE FROM public.online_presence 
+    WHERE last_seen < TIMEZONE('utc', NOW()) - INTERVAL '1 hour';
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Enable RLS on online_presence
+ALTER TABLE public.online_presence ENABLE ROW LEVEL SECURITY;
+
+-- Policies for online_presence
+CREATE POLICY "Anyone can insert presence" ON public.online_presence FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update presence" ON public.online_presence FOR UPDATE USING (true);
+CREATE POLICY "Admins can view all presence" ON public.online_presence FOR SELECT USING (
+    EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND role = 'admin')
+);
+
+-- =============================================
 -- 🌱 SEED DATA
 -- =============================================
 
