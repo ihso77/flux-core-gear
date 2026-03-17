@@ -7,6 +7,8 @@ import { useCartSync } from "@/hooks/useCartSync";
 import { usePresenceTracker } from "@/hooks/useOnlineUsers";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import AIChatWidget from "@/components/AIChatWidget";
+import IntroAnimation from "@/components/IntroAnimation";
+import OnlineUsersFloatingBadge from "@/components/OnlineUsersFloatingBadge";
 import Index from "./pages/Index.tsx";
 import ProductDetail from "./pages/ProductDetail.tsx";
 import NotFound from "./pages/NotFound.tsx";
@@ -23,13 +25,14 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   useCartSync();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   
   // Track user presence for online users feature
   usePresenceTracker(user?.id);
   
   return (
     <>
+      <IntroAnimation />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
@@ -40,12 +43,11 @@ const AppContent = () => {
         <Route path="/about" element={<About />} />
         <Route path="/collections" element={<Collections />} />
         <Route path="/admin" element={<Admin />} />
-        {/* Product route - uses numeric ID */}
         <Route path="/product/:id" element={<ProductDetail />} />
-        {/* 404 for all other routes */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <AIChatWidget />
+      {isAdmin && <OnlineUsersFloatingBadge />}
     </>
   );
 };
