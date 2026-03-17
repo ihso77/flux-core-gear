@@ -93,8 +93,8 @@ interface CategoryFilterProps {
 
 const CategoryFilter = ({ activeCategory, onCategoryChange }: CategoryFilterProps) => {
   return (
-    <div className="w-full overflow-x-auto pb-2 scrollbar-hide">
-      <div className="flex gap-3 min-w-max px-1">
+    <div className="w-full scroll-x-container pb-2 -mx-3 px-3 sm:mx-0 sm:px-0">
+      <div className="flex gap-2 sm:gap-3 min-w-max">
         {categories.map((category, index) => {
           const isActive = activeCategory === category.id;
           const Icon = category.icon;
@@ -108,7 +108,7 @@ const CategoryFilter = ({ activeCategory, onCategoryChange }: CategoryFilterProp
               transition={{ delay: index * 0.05 }}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className={`group relative flex items-center gap-2 rounded-xl px-4 py-3 font-body text-sm font-medium transition-all duration-300 ${
+              className={`group relative flex items-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl px-3 sm:px-4 py-2 sm:py-3 font-body text-xs sm:text-sm font-medium transition-all duration-300 touch-manipulation whitespace-nowrap scroll-snap-item ${
                 isActive
                   ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
                   : "bg-card border border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
@@ -127,7 +127,7 @@ const CategoryFilter = ({ activeCategory, onCategoryChange }: CategoryFilterProp
                 animate={isActive ? { rotate: [0, -10, 10, 0] } : {}}
                 transition={{ duration: 0.5 }}
               >
-                <Icon className={`h-4 w-4 relative z-10 ${isActive ? "text-primary-foreground" : "group-hover:text-primary transition-colors"}`} />
+                <Icon className={`h-3.5 w-3.5 sm:h-4 sm:w-4 relative z-10 ${isActive ? "text-primary-foreground" : "group-hover:text-primary transition-colors"}`} />
               </motion.div>
               
               <span className="relative z-10">{category.label}</span>

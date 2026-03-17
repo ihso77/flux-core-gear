@@ -88,18 +88,18 @@ const ProductGrid = () => {
   const activeCategoryData = categories.find(c => c.id === activeCategory);
 
   return (
-    <section id="shop" className="relative bg-background py-16 sm:py-32">
+    <section id="shop" className="relative bg-background py-12 sm:py-16 md:py-32">
       {/* Background decoration */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[400px] w-[600px] -translate-x-1/2 -translate-y-1/2 bg-primary/3 blur-[150px] rounded-full" />
 
-      <div className="container relative mx-auto px-4 lg:px-8">
+      <div className="container relative mx-auto px-3 sm:px-4 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-12 text-center"
+          className="mb-8 sm:mb-12 text-center"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -119,7 +119,7 @@ const ProductGrid = () => {
             </p>
           </motion.div>
           
-          <h2 className="font-display text-3xl font-bold text-foreground sm:text-4xl md:text-5xl mb-4">
+          <h2 className="font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl lg:text-5xl mb-3 sm:mb-4">
             Shop the{" "}
             <motion.span
               className="text-gradient-pulse inline-block"
@@ -136,7 +136,7 @@ const ProductGrid = () => {
             </motion.span>
           </h2>
           
-          <p className="max-w-2xl mx-auto font-body text-muted-foreground">
+          <p className="max-w-2xl mx-auto font-body text-sm sm:text-base text-muted-foreground">
             Discover premium gaming gear engineered for competitive excellence
           </p>
         </motion.div>
@@ -146,7 +146,7 @@ const ProductGrid = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <SearchBar
             value={searchQuery}
@@ -160,7 +160,7 @@ const ProductGrid = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <CategoryFilter
             activeCategory={activeCategory}
@@ -173,7 +173,7 @@ const ProductGrid = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="flex items-center justify-between mb-6"
+          className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6"
         >
           <div className="flex items-center gap-3">
             <span className="font-body text-sm text-muted-foreground">
@@ -195,45 +195,45 @@ const ProductGrid = () => {
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setIsFilterOpen(!isFilterOpen)}
-              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-1 sm:gap-2 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium transition-colors touch-manipulation ${
                 isFilterOpen 
                   ? "bg-primary text-primary-foreground" 
                   : "bg-card border border-border text-muted-foreground hover:text-foreground hover:border-primary/30"
               }`}
             >
-              <SlidersHorizontal className="h-4 w-4" />
+              <SlidersHorizontal className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Filters</span>
             </motion.button>
             
-            <div className="flex rounded-lg border border-border bg-card p-1">
+            <div className="flex rounded-lg border border-border bg-card p-0.5 sm:p-1">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setViewMode("grid")}
-                className={`p-2 rounded-md transition-colors ${
+                className={`p-1.5 sm:p-2 rounded-md transition-colors touch-manipulation ${
                   viewMode === "grid" 
                     ? "bg-primary text-primary-foreground" 
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setViewMode("list")}
-                className={`p-2 rounded-md transition-colors ${
+                className={`p-1.5 sm:p-2 rounded-md transition-colors touch-manipulation ${
                   viewMode === "list" 
                     ? "bg-primary text-primary-foreground" 
                     : "text-muted-foreground hover:text-foreground"
                 }`}
               >
-                <List className="h-4 w-4" />
+                <List className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </motion.button>
             </div>
           </div>
@@ -294,7 +294,7 @@ const ProductGrid = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className={`grid gap-4 sm:gap-6 ${
+              className={`grid gap-3 sm:gap-4 md:gap-6 ${
                 viewMode === "grid" 
                   ? "grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" 
                   : "grid-cols-1 md:grid-cols-2"

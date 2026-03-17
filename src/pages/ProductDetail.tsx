@@ -64,26 +64,26 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pt-20 pb-12 sm:pt-24">
-      <div className="container mx-auto px-4 lg:px-8">
+    <div className="min-h-screen bg-background pt-14 sm:pt-16 md:pt-20 pb-8 sm:pb-12 overflow-x-hidden">
+      <div className="mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl">
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           onClick={() => navigate(-1)}
-          className="mb-8 flex items-center gap-2 font-body text-sm text-muted-foreground transition-colors hover:text-foreground"
+          className="mb-6 sm:mb-8 flex items-center gap-2 font-body text-xs sm:text-sm text-muted-foreground transition-colors hover:text-foreground touch-manipulation"
         >
           <ArrowLeft className="h-4 w-4" />
           Back
         </motion.button>
 
-        <div className="grid gap-8 sm:gap-12 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 md:gap-8 lg:gap-12 lg:grid-cols-2">
           {/* Images */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-card">
+            <div className="relative aspect-square overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl border border-border bg-card">
               {images[selectedImage] && (
                 <motion.img
                   key={selectedImage}
@@ -97,12 +97,12 @@ const ProductDetail = () => {
               )}
             </div>
             {images.length > 1 && (
-              <div className="mt-4 flex gap-3">
+              <div className="mt-2 sm:mt-3 md:mt-4 flex gap-1.5 sm:gap-2 md:gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
                 {images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setSelectedImage(i)}
-                    className={`h-16 w-16 overflow-hidden rounded-lg border transition-all duration-300 ${
+                    className={`h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 flex-shrink-0 overflow-hidden rounded-md sm:rounded-lg border transition-all duration-300 touch-manipulation ${
                       i === selectedImage ? "border-primary glow-nebula" : "border-border hover:border-muted-foreground"
                     }`}
                   >
@@ -119,29 +119,29 @@ const ProductDetail = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1 className="mb-3 sm:mb-4 font-display text-2xl font-bold text-foreground sm:text-3xl md:text-4xl">
+            <h1 className="mb-2 sm:mb-3 md:mb-4 font-display text-lg sm:text-xl font-bold text-foreground md:text-2xl lg:text-3xl">
               {product.title}
             </h1>
-            <p className="mb-4 sm:mb-6 font-body text-sm sm:text-base leading-relaxed text-muted-foreground">
+            <p className="mb-3 sm:mb-4 md:mb-6 font-body text-xs sm:text-sm leading-relaxed text-muted-foreground md:text-base">
               {product.description}
             </p>
 
             {variant && (
-              <p className="mb-6 sm:mb-8 font-display text-2xl sm:text-3xl font-bold text-foreground">
+              <p className="mb-4 sm:mb-6 md:mb-8 font-display text-lg sm:text-xl md:text-2xl font-bold text-foreground">
                 {variant.price.currencyCode} {parseFloat(variant.price.amount).toFixed(2)}
               </p>
             )}
 
             {/* Variants */}
             {product.variants.edges.length > 1 && (
-              <div className="mb-8">
-                <p className="mb-3 font-body text-sm font-medium text-foreground">Variant</p>
-                <div className="flex flex-wrap gap-2">
+              <div className="mb-4 sm:mb-6 md:mb-8">
+                <p className="mb-2 sm:mb-3 font-body text-xs sm:text-sm font-medium text-foreground">Variant</p>
+                <div className="flex flex-wrap gap-1 sm:gap-1.5 md:gap-2">
                   {product.variants.edges.map((v, i) => (
                     <button
                       key={v.node.id}
                       onClick={() => setSelectedVariantIdx(i)}
-                      className={`rounded-lg border px-4 py-2 font-body text-sm transition-all duration-300 ${
+                      className={`rounded-md sm:rounded-lg border px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 font-body text-xs sm:text-sm transition-all duration-300 touch-manipulation ${
                         i === selectedVariantIdx
                           ? "border-primary bg-primary/10 text-foreground glow-nebula"
                           : "border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground"
@@ -160,7 +160,7 @@ const ProductDetail = () => {
               disabled={isLoading || !variant?.availableForSale}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex w-full items-center justify-center gap-3 rounded-xl gradient-pulse py-4 font-body text-base font-semibold text-primary-foreground transition-all duration-300 glow-nebula hover:glow-nebula-lg disabled:opacity-50 sm:w-auto sm:px-12"
+              className="flex w-full items-center justify-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl gradient-pulse py-3 sm:py-3.5 md:py-4 font-body text-sm sm:text-base font-semibold text-primary-foreground transition-all duration-300 glow-nebula hover:glow-nebula-lg disabled:opacity-50 touch-manipulation"
             >
               {isLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />

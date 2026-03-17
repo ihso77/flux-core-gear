@@ -36,32 +36,32 @@ const Footer = () => {
   };
 
   return (
-    <footer id="about" className="relative border-t border-border bg-background py-10 sm:py-16 overflow-hidden">
+    <footer id="about" className="relative border-t border-border bg-background py-8 sm:py-10 md:py-16 overflow-hidden">
       {/* Background glow effect */}
       <div className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[600px] -translate-x-1/2 -translate-y-1/2 bg-primary/5 blur-[150px] rounded-full" />
       
-      <div className="container relative mx-auto px-4 lg:px-8">
+      <div className="container relative mx-auto px-3 sm:px-4 lg:px-8">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-2 gap-8 md:grid-cols-4"
+          className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4"
         >
-          <motion.div variants={itemVariants} className="col-span-2 md:col-span-1">
+          <motion.div variants={itemVariants} className="col-span-2 md:col-span-1 mb-4 md:mb-0">
             <motion.span
               whileHover={{ scale: 1.02 }}
-              className="inline-block font-display text-2xl font-bold tracking-tight text-foreground cursor-pointer"
+              className="inline-block font-display text-xl sm:text-2xl font-bold tracking-tight text-foreground cursor-pointer touch-manipulation"
             >
               NOV<span className="text-gradient-pulse">A</span>
             </motion.span>
-            <p className="mt-4 max-w-xs font-body text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-3 sm:mt-4 max-w-xs font-body text-xs sm:text-sm leading-relaxed text-muted-foreground">
               Premium gaming peripherals engineered for competitive excellence.
             </p>
             
             {/* Social links */}
-            <motion.div 
-              className="flex gap-3 mt-6"
+            <motion.div
+              className="flex gap-2 sm:gap-3 mt-4 sm:mt-6"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -72,14 +72,14 @@ const Footer = () => {
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-secondary/50 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:bg-primary/10"
+                  className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg border border-border bg-secondary/50 text-muted-foreground transition-all duration-300 hover:border-primary/50 hover:text-primary hover:bg-primary/10 touch-manipulation"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 + index * 0.1 }}
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </motion.a>
               ))}
             </motion.div>

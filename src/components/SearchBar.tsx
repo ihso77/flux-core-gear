@@ -47,7 +47,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
             : "0 0 0px 0px transparent",
         }}
         transition={{ duration: 0.2 }}
-        className={`relative flex items-center gap-3 rounded-xl border bg-card/50 backdrop-blur-sm px-4 py-3 transition-all duration-300 ${
+        className={`relative flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl border bg-card/50 backdrop-blur-sm px-3 sm:px-4 py-2 sm:py-3 transition-all duration-300 ${
           isFocused 
             ? "border-primary/50" 
             : "border-border hover:border-primary/30"
@@ -57,7 +57,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
           animate={isFocused ? { rotate: 360 } : { rotate: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Search className={`h-5 w-5 transition-colors ${isFocused ? "text-primary" : "text-muted-foreground"}`} />
+          <Search className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors ${isFocused ? "text-primary" : "text-muted-foreground"}`} />
         </motion.div>
         
         <input
@@ -74,7 +74,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
             setTimeout(() => setShowSuggestions(false), 200);
           }}
           placeholder={placeholder}
-          className="flex-1 bg-transparent font-body text-sm text-foreground placeholder:text-muted-foreground outline-none"
+          className="flex-1 bg-transparent font-body text-xs sm:text-sm text-foreground placeholder:text-muted-foreground outline-none min-w-0"
         />
         
         <AnimatePresence>
@@ -86,9 +86,9 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
               whileHover={{ scale: 1.1, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleClear}
-              className="flex h-6 w-6 items-center justify-center rounded-full bg-muted hover:bg-muted-foreground/20 transition-colors"
+              className="flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-muted hover:bg-muted-foreground/20 transition-colors touch-manipulation flex-shrink-0"
             >
-              <X className="h-3 w-3 text-muted-foreground" />
+              <X className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-muted-foreground" />
             </motion.button>
           )}
         </AnimatePresence>
@@ -112,9 +112,9 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 z-50 mt-2 rounded-xl border border-border bg-card/95 backdrop-blur-xl p-2 shadow-xl"
+            className="absolute top-full left-0 right-0 z-50 mt-2 rounded-lg sm:rounded-xl border border-border bg-card/95 backdrop-blur-xl p-2 shadow-xl"
           >
-            <div className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-muted-foreground">
+            <div className="flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-medium text-muted-foreground">
               {value.length === 0 ? (
                 <>
                   <TrendingUp className="h-3 w-3" />
@@ -128,7 +128,7 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
               )}
             </div>
             
-            <div className="space-y-1">
+            <div className="space-y-0.5 sm:space-y-1">
               {filteredSuggestions.map((suggestion, index) => (
                 <motion.button
                   key={suggestion}
@@ -139,9 +139,9 @@ const SearchBar = ({ value, onChange, placeholder = "Search products..." }: Sear
                     onChange(suggestion);
                     setShowSuggestions(false);
                   }}
-                  className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-foreground hover:bg-primary/10 transition-colors group"
+                  className="w-full flex items-center gap-2 sm:gap-3 rounded-md sm:rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-foreground hover:bg-primary/10 transition-colors group touch-manipulation"
                 >
-                  <Search className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <Search className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
                   <span>{suggestion}</span>
                 </motion.button>
               ))}

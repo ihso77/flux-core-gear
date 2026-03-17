@@ -81,14 +81,14 @@ const Navbar = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 safe-area-top ${
         scrolled ? "border-b border-border bg-background/95 backdrop-blur-xl shadow-lg shadow-primary/5" : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 lg:px-8">
+      <div className="mx-auto flex h-14 sm:h-16 md:h-20 items-center justify-between px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl">
         <motion.a
           href="/"
-          className="font-display text-2xl font-bold tracking-tight text-foreground relative group"
+          className="font-display text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-foreground relative group touch-manipulation"
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -98,7 +98,7 @@ const Navbar = () => {
           />
         </motion.a>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-4 sm:gap-6 lg:gap-8 md:flex">
           {navLinks.map((link, index) => (
             <div key={link.label} className="relative" ref={link.hasDropdown ? dropdownRef : null}>
               {link.hasDropdown ? (
@@ -107,7 +107,7 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 + 0.5 }}
-                  className="flex items-center gap-1 relative font-body text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
+                  className="flex items-center gap-1 relative font-body text-xs sm:text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
                 >
                   {link.label}
                   <motion.span animate={{ rotate: dropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -191,7 +191,7 @@ const Navbar = () => {
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
           {/* Search */}
           <AnimatePresence>
             {searchOpen ? (
@@ -200,7 +200,7 @@ const Navbar = () => {
                 animate={{ width: "auto", opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 onSubmit={handleSearch}
-                className="flex items-center gap-2 rounded-lg border border-primary/50 bg-card px-3 py-2"
+                className="flex items-center gap-2 rounded-lg border border-primary/50 bg-card px-2 sm:px-3 py-1.5 sm:py-2"
               >
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <input
@@ -209,7 +209,7 @@ const Navbar = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-40 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                  className="w-32 sm:w-40 bg-transparent text-xs sm:text-sm text-foreground outline-none placeholder:text-muted-foreground"
                 />
                 <button type="button" onClick={() => setSearchOpen(false)} className="text-muted-foreground hover:text-foreground">
                   <X className="h-4 w-4" />
@@ -221,11 +221,11 @@ const Navbar = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setSearchOpen(true)}
-                className="relative text-muted-foreground transition-colors hover:text-foreground group"
+                className="relative text-muted-foreground transition-colors hover:text-foreground group touch-manipulation p-2 sm:p-1.5 md:p-0"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Search className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+                <Search className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:rotate-12" />
               </motion.button>
             )}
           </AnimatePresence>
@@ -239,9 +239,9 @@ const Navbar = () => {
                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 touch-manipulation"
               >
-                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-sm font-bold text-primary-foreground">
+                <div className="h-7 w-7 sm:h-8 md:h-9 md:w-9 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-xs sm:text-sm font-bold text-primary-foreground">
                   {profile?.full_name?.charAt(0) || profile?.email?.charAt(0).toUpperCase() || "U"}
                 </div>
               </motion.button>
@@ -252,10 +252,10 @@ const Navbar = () => {
               >
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-primary/30"
+                  className="flex items-center gap-1 sm:gap-2 rounded-lg border border-border bg-card px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-foreground transition-colors hover:border-primary/30"
                 >
-                  <User className="h-4 w-4" />
-                  <span className="hidden sm:inline">Sign In</span>
+                  <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="hidden md:inline">Sign In</span>
                 </Link>
               </motion.div>
             )}
@@ -314,7 +314,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="relative text-muted-foreground md:hidden overflow-hidden"
+            className="relative text-muted-foreground md:hidden overflow-hidden touch-manipulation p-1"
             onClick={() => setMobileOpen(!mobileOpen)}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
@@ -342,9 +342,9 @@ const Navbar = () => {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl md:hidden"
+            className="overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl md:hidden max-h-[80vh] overflow-y-auto scrollbar-hide safe-area-bottom"
           >
-            <div className="px-4 py-6">
+            <div className="px-3 sm:px-4 py-4 sm:py-6">
               {/* Mobile Search */}
               <form onSubmit={handleSearch} className="mb-6">
                 <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
@@ -361,7 +361,7 @@ const Navbar = () => {
 
               {/* Categories */}
               <p className="mb-3 font-body text-xs font-medium uppercase tracking-wider text-muted-foreground">Categories</p>
-              <div className="grid grid-cols-2 gap-2 mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-4 sm:mb-6">
                 {categories.map((category, i) => {
                   const Icon = category.icon;
                   return (
@@ -375,7 +375,7 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
-                      className="flex items-center gap-2 rounded-lg border border-border bg-card/50 px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors"
+                      className="flex items-center gap-2 rounded-lg border border-border bg-card/50 px-3 py-2.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors touch-manipulation"
                     >
                       <Icon className="h-4 w-4" />
                       <span>{category.label}</span>
@@ -386,7 +386,7 @@ const Navbar = () => {
 
               {/* User Section */}
               {user ? (
-                <div className="mb-6">
+                <div className="mb-4 sm:mb-6">
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-card/50 mb-2">
                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-sm font-bold text-primary-foreground">
                       {profile?.full_name?.charAt(0) || "U"}
@@ -412,11 +412,11 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-3 mb-6">
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg gradient-pulse py-2.5 text-sm font-medium text-primary-foreground">
+                <div className="flex gap-2 sm:gap-3 mb-6">
+                  <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg gradient-pulse py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-primary-foreground">
                     Sign In
                   </Link>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg border border-border bg-card py-2.5 text-sm font-medium text-foreground">
+                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg border border-border bg-card py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground">
                     Sign Up
                   </Link>
                 </div>
