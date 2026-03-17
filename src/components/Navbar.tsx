@@ -157,14 +157,21 @@ const Navbar = () => {
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: i * 0.03 }}
-                            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all group ${
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 group relative overflow-hidden ${
                               isAll
-                                ? 'gradient-pulse text-primary-foreground font-semibold'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                                ? 'bg-gradient-to-r from-primary/90 via-primary to-primary/90 text-primary-foreground font-semibold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 active:scale-[0.98]'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-secondary/80 hover:translate-x-1'
                             }`}
                           >
-                            <Icon className={`h-4 w-4 ${isAll ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-primary transition-colors'}`} />
-                            <span>{category.label}</span>
+                            <Icon className={`h-4 w-4 relative z-10 ${isAll ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-primary transition-colors'}`} />
+                            <span className="relative z-10">{category.label}</span>
+                            {isAll && (
+                              <motion.div
+                                className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0"
+                                animate={{ x: ['-100%', '100%'] }}
+                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                              />
+                            )}
                           </motion.button>
                         );
                       })}
@@ -330,14 +337,21 @@ const Navbar = () => {
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
-                      className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors touch-manipulation ${
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-all duration-300 touch-manipulation relative overflow-hidden ${
                         isAll
-                          ? 'gradient-pulse text-primary-foreground font-semibold'
-                          : 'border border-border bg-card/50 text-muted-foreground hover:text-foreground hover:border-primary/30'
+                          ? 'bg-gradient-to-r from-primary/90 via-primary to-primary/90 text-primary-foreground font-semibold shadow-lg shadow-primary/20 hover:shadow-xl'
+                          : 'border border-border bg-card/50 text-muted-foreground hover:text-foreground hover:border-primary/30 active:bg-secondary/80'
                       }`}
                     >
-                      <Icon className="h-4 w-4" />
-                      <span>{category.label}</span>
+                      <Icon className={`h-4 w-4 relative z-10 ${isAll ? 'text-primary-foreground' : 'text-muted-foreground'}`} />
+                      <span className="relative z-10">{category.label}</span>
+                      {isAll && (
+                        <motion.div
+                          className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0"
+                          animate={{ x: ['-100%', '100%'] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        />
+                      )}
                     </motion.button>
                   );
                 })}
