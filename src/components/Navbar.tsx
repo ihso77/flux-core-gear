@@ -139,7 +139,7 @@ const Navbar = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-56 rounded-xl border border-border bg-card backdrop-blur-xl p-2 shadow-2xl shadow-background/50"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 min-w-[240px] rounded-xl border border-border bg-card backdrop-blur-xl p-2 shadow-2xl shadow-background/50"
                   >
                     <div className="grid gap-0.5">
                       {categories.map((category, i) => {
@@ -164,7 +164,7 @@ const Navbar = () => {
                             }`}
                           >
                             <Icon className={`h-4 w-4 relative z-10 ${isAll ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-primary transition-colors'}`} />
-                            <span className="relative z-10">{category.label}</span>
+                            <span className="relative z-10 whitespace-nowrap">{category.label}</span>
                             {isAll && (
                               <motion.div
                                 className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0"
@@ -344,7 +344,7 @@ const Navbar = () => {
                       }`}
                     >
                       <Icon className={`h-4 w-4 relative z-10 ${isAll ? 'text-primary-foreground' : 'text-muted-foreground'}`} />
-                      <span className="relative z-10">{category.label}</span>
+                      <span className="relative z-10 whitespace-nowrap">{category.label}</span>
                       {isAll && (
                         <motion.div
                           className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0"
