@@ -216,6 +216,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         provider: 'github',
         options: {
           redirectTo: `${window.location.origin}/`,
+          scopes: 'read:user user:email',
         },
       });
       return { error: error as Error | null };
