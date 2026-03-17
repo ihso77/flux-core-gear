@@ -248,24 +248,24 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full right-0 mt-2 w-56 rounded-xl border border-border bg-card backdrop-blur-xl p-2 shadow-2xl shadow-background/50"
+                  className="absolute top-full right-0 mt-2 w-72 min-w-fit rounded-xl border border-border bg-card backdrop-blur-xl p-2 shadow-2xl shadow-background/50"
                 >
-                  <div className="px-3 py-2 border-b border-border mb-2">
-                    <p className="font-medium text-sm text-foreground">{displayName}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                  <div className="px-3 py-2 border-b border-border mb-2 overflow-hidden">
+                    <p className="font-medium text-sm text-foreground truncate">{displayName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                   </div>
-                  <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                  <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors whitespace-nowrap">
                     <User className="h-4 w-4" /> Profile
                   </Link>
-                  <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                  <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors whitespace-nowrap">
                     <Settings className="h-4 w-4" /> Settings
                   </Link>
                   {isAdmin && (
-                    <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors">
+                    <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors whitespace-nowrap">
                       <Shield className="h-4 w-4" /> Admin Dashboard
                     </Link>
                   )}
-                  <button onClick={handleSignOut} className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors">
+                  <button onClick={handleSignOut} className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors whitespace-nowrap">
                     <LogOut className="h-4 w-4" /> Sign Out
                   </button>
                 </motion.div>
