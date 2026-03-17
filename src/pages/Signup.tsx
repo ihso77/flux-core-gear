@@ -13,8 +13,17 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const { signUp } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    const { error } = await signInWithGoogle();
+    if (error) {
+      toast.error(error.message || "Failed to sign in with Google");
+      setIsLoading(false);
+    }
+  };
 
   // Password strength
   const getPasswordStrength = (pass: string) => {
@@ -267,9 +276,12 @@ const Signup = () => {
           {/* Social Login */}
           <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <motion.button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={isLoading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border border-border bg-background py-2.5 sm:py-3 font-body text-xs sm:text-sm font-medium text-foreground transition-colors hover:bg-card touch-manipulation"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border border-border bg-background py-2.5 sm:py-3 font-body text-xs sm:text-sm font-medium text-foreground transition-colors hover:bg-card touch-manipulation disabled:opacity-50"
             >
               <Chrome className="h-4 w-4 sm:h-5 sm:w-5" />
               <span>Google</span>
