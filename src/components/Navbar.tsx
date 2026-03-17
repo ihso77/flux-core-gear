@@ -23,7 +23,7 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -42,19 +42,13 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (searchOpen && searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
+    if (searchOpen && searchInputRef.current) searchInputRef.current.focus();
   }, [searchOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setDropdownOpen(false);
-      }
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
-        setUserMenuOpen(false);
-      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) setDropdownOpen(false);
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) setUserMenuOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -76,6 +70,8 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User";
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -93,9 +89,6 @@ const Navbar = () => {
           whileTap={{ scale: 0.98 }}
         >
           NOV<span className="text-gradient-pulse">A</span>
-          <motion.span
-            className="absolute -bottom-1 left-0 h-0.5 w-0 bg-gradient-to-r from-primary to-primary/50 group-hover:w-full transition-all duration-300"
-          />
         </motion.a>
 
         <div className="hidden items-center gap-4 sm:gap-6 lg:gap-8 md:flex">
@@ -107,16 +100,12 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 + 0.5 }}
-                  className="flex items-center gap-1 relative font-body text-xs sm:text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
+                  className="flex items-center gap-1 relative font-body text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
                 >
                   {link.label}
                   <motion.span animate={{ rotate: dropdownOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
                     <ChevronDown className="h-4 w-4" />
                   </motion.span>
-                  <motion.span
-                    className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
-                    style={{ transformOrigin: "left" }}
-                  />
                 </motion.button>
               ) : link.href.startsWith("/") ? (
                 <motion.div
@@ -124,15 +113,9 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 + 0.5 }}
                 >
-                  <Link
-                    to={link.href}
-                    className="relative font-body text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group"
-                  >
+                  <Link to={link.href} className="relative font-body text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground group">
                     {link.label}
-                    <motion.span
-                      className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
-                      style={{ transformOrigin: "left" }}
-                    />
+                    <motion.span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
                   </Link>
                 </motion.div>
               ) : (
@@ -142,16 +125,13 @@ const Navbar = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 + 0.5 }}
-                  whileHover={{ y: -2 }}
                 >
                   {link.label}
-                  <motion.span
-                    className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100"
-                    style={{ transformOrigin: "left" }}
-                  />
+                  <motion.span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-primary transition-transform duration-300 group-hover:scale-x-100" />
                 </motion.a>
               )}
 
+              {/* Shop Dropdown - Fixed styling */}
               <AnimatePresence>
                 {link.hasDropdown && dropdownOpen && (
                   <motion.div
@@ -159,28 +139,33 @@ const Navbar = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-56 rounded-xl border border-border bg-card/95 backdrop-blur-xl p-2 shadow-xl"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-56 rounded-xl border border-border bg-card backdrop-blur-xl p-2 shadow-2xl shadow-background/50"
                   >
-                    <div className="grid gap-1">
+                    <div className="grid gap-0.5">
                       {categories.map((category, i) => {
                         const Icon = category.icon;
+                        const isAll = category.id === 'all';
                         return (
-                          <motion.a
+                          <motion.button
                             key={category.id}
-                            href={`#shop`}
-                            onClick={(e) => {
-                              e.preventDefault();
+                            onClick={() => {
                               setDropdownOpen(false);
                               window.dispatchEvent(new CustomEvent("navbar-category", { detail: category.id }));
+                              const shopEl = document.getElementById('shop');
+                              if (shopEl) shopEl.scrollIntoView({ behavior: 'smooth' });
                             }}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: i * 0.05 }}
-                            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-colors group"
+                            transition={{ delay: i * 0.03 }}
+                            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all group ${
+                              isAll
+                                ? 'gradient-pulse text-primary-foreground font-semibold'
+                                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                            }`}
                           >
-                            <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <Icon className={`h-4 w-4 ${isAll ? 'text-primary-foreground' : 'text-muted-foreground group-hover:text-primary transition-colors'}`} />
                             <span>{category.label}</span>
-                          </motion.a>
+                          </motion.button>
                         );
                       })}
                     </div>
@@ -200,7 +185,7 @@ const Navbar = () => {
                 animate={{ width: "auto", opacity: 1 }}
                 exit={{ width: 0, opacity: 0 }}
                 onSubmit={handleSearch}
-                className="flex items-center gap-2 rounded-lg border border-primary/50 bg-card px-2 sm:px-3 py-1.5 sm:py-2"
+                className="flex items-center gap-2 rounded-lg border border-primary/50 bg-card px-3 py-2"
               >
                 <Search className="h-4 w-4 text-muted-foreground" />
                 <input
@@ -209,7 +194,7 @@ const Navbar = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search..."
-                  className="w-32 sm:w-40 bg-transparent text-xs sm:text-sm text-foreground outline-none placeholder:text-muted-foreground"
+                  className="w-32 sm:w-40 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
                 />
                 <button type="button" onClick={() => setSearchOpen(false)} className="text-muted-foreground hover:text-foreground">
                   <X className="h-4 w-4" />
@@ -217,15 +202,12 @@ const Navbar = () => {
               </motion.form>
             ) : (
               <motion.button
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
                 onClick={() => setSearchOpen(true)}
-                className="relative text-muted-foreground transition-colors hover:text-foreground group touch-manipulation p-2 sm:p-1.5 md:p-0"
+                className="relative text-muted-foreground transition-colors hover:text-foreground touch-manipulation p-2"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Search className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:rotate-12" />
+                <Search className="h-4 w-4 sm:h-5 sm:w-5" />
               </motion.button>
             )}
           </AnimatePresence>
@@ -241,26 +223,17 @@ const Navbar = () => {
                 whileTap={{ scale: 0.95 }}
                 className="flex items-center gap-2 touch-manipulation"
               >
-                <div className="h-7 w-7 sm:h-8 md:h-9 md:w-9 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-xs sm:text-sm font-bold text-primary-foreground">
-                  {profile?.full_name?.charAt(0) || profile?.email?.charAt(0).toUpperCase() || "U"}
+                <div className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-xs sm:text-sm font-bold text-primary-foreground">
+                  {displayName.charAt(0).toUpperCase()}
                 </div>
               </motion.button>
             ) : (
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link
-                  to="/login"
-                  className="flex items-center gap-1 sm:gap-2 rounded-lg border border-border bg-card px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-foreground transition-colors hover:border-primary/30"
-                >
-                  <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden md:inline">Sign In</span>
-                </Link>
-              </motion.div>
+              <Link to="/login" className="flex items-center gap-1 sm:gap-2 rounded-lg border border-border bg-card px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-foreground transition-colors hover:border-primary/30">
+                <User className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden md:inline">Sign In</span>
+              </Link>
             )}
 
-            {/* User Dropdown */}
             <AnimatePresence>
               {userMenuOpen && user && (
                 <motion.div
@@ -268,44 +241,25 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute top-full right-0 mt-2 w-56 rounded-xl border border-border bg-card/95 backdrop-blur-xl p-2 shadow-xl"
+                  className="absolute top-full right-0 mt-2 w-56 rounded-xl border border-border bg-card backdrop-blur-xl p-2 shadow-2xl shadow-background/50"
                 >
                   <div className="px-3 py-2 border-b border-border mb-2">
-                    <p className="font-medium text-sm text-foreground">{profile?.full_name || "User"}</p>
-                    <p className="text-xs text-muted-foreground">{profile?.email}</p>
+                    <p className="font-medium text-sm text-foreground">{displayName}</p>
+                    <p className="text-xs text-muted-foreground">{user.email}</p>
                   </div>
-                  <Link
-                    to="/profile"
-                    onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-colors"
-                  >
-                    <User className="h-4 w-4" />
-                    Profile
+                  <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                    <User className="h-4 w-4" /> Profile
                   </Link>
-                  <Link
-                    to="/profile"
-                    onClick={() => setUserMenuOpen(false)}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-primary/10 transition-colors"
-                  >
-                    <Settings className="h-4 w-4" />
-                    Settings
+                  <Link to="/profile" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                    <Settings className="h-4 w-4" /> Settings
                   </Link>
-                  {profile?.role === 'admin' && (
-                    <Link
-                      to="/admin"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors"
-                    >
-                      <Shield className="h-4 w-4" />
-                      Admin Dashboard
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-primary hover:bg-primary/10 transition-colors">
+                      <Shield className="h-4 w-4" /> Admin Dashboard
                     </Link>
                   )}
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
+                  <button onClick={handleSignOut} className="w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors">
+                    <LogOut className="h-4 w-4" /> Sign Out
                   </button>
                 </motion.div>
               )}
@@ -314,9 +268,8 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="relative text-muted-foreground md:hidden overflow-hidden touch-manipulation p-1"
+            className="relative text-muted-foreground md:hidden touch-manipulation p-1"
             onClick={() => setMobileOpen(!mobileOpen)}
-            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
           >
             <AnimatePresence mode="wait">
@@ -344,10 +297,10 @@ const Navbar = () => {
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden border-t border-border bg-background/95 backdrop-blur-xl md:hidden max-h-[80vh] overflow-y-auto scrollbar-hide safe-area-bottom"
           >
-            <div className="px-3 sm:px-4 py-4 sm:py-6">
+            <div className="px-4 py-6">
               {/* Mobile Search */}
               <form onSubmit={handleSearch} className="mb-6">
-                <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+                <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2.5">
                   <Search className="h-4 w-4 text-muted-foreground" />
                   <input
                     type="text"
@@ -361,98 +314,74 @@ const Navbar = () => {
 
               {/* Categories */}
               <p className="mb-3 font-body text-xs font-medium uppercase tracking-wider text-muted-foreground">Categories</p>
-              <div className="grid grid-cols-2 gap-2 mb-4 sm:mb-6">
+              <div className="grid grid-cols-2 gap-2 mb-6">
                 {categories.map((category, i) => {
                   const Icon = category.icon;
+                  const isAll = category.id === 'all';
                   return (
-                    <motion.a
+                    <motion.button
                       key={category.id}
-                      href={`#shop`}
                       onClick={() => {
                         setMobileOpen(false);
                         window.dispatchEvent(new CustomEvent("navbar-category", { detail: category.id }));
+                        const shopEl = document.getElementById('shop');
+                        if (shopEl) shopEl.scrollIntoView({ behavior: 'smooth' });
                       }}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.05 }}
-                      className="flex items-center gap-2 rounded-lg border border-border bg-card/50 px-3 py-2.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors touch-manipulation"
+                      className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors touch-manipulation ${
+                        isAll
+                          ? 'gradient-pulse text-primary-foreground font-semibold'
+                          : 'border border-border bg-card/50 text-muted-foreground hover:text-foreground hover:border-primary/30'
+                      }`}
                     >
                       <Icon className="h-4 w-4" />
                       <span>{category.label}</span>
-                    </motion.a>
+                    </motion.button>
                   );
                 })}
               </div>
 
               {/* User Section */}
               {user ? (
-                <div className="mb-4 sm:mb-6">
+                <div className="mb-6">
                   <div className="flex items-center gap-3 p-3 rounded-lg bg-card/50 mb-2">
                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-sm font-bold text-primary-foreground">
-                      {profile?.full_name?.charAt(0) || "U"}
+                      {displayName.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <p className="font-medium text-sm text-foreground">{profile?.full_name || "User"}</p>
-                      <p className="text-xs text-muted-foreground">{profile?.email}</p>
+                      <p className="font-medium text-sm text-foreground">{displayName}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
                     </div>
                   </div>
                   <Link to="/profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-muted-foreground hover:text-foreground">
-                    <User className="h-4 w-4" />
-                    Profile
+                    <User className="h-4 w-4" /> Profile
                   </Link>
-                  {profile?.role === 'admin' && (
-                    <Link to="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-primary hover:text-primary">
-                      <Shield className="h-4 w-4" />
-                      Admin Dashboard
+                  {isAdmin && (
+                    <Link to="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 py-2 text-primary">
+                      <Shield className="h-4 w-4" /> Admin Dashboard
                     </Link>
                   )}
                   <button onClick={handleSignOut} className="flex items-center gap-2 py-2 text-red-500">
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
+                    <LogOut className="h-4 w-4" /> Sign Out
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-2 sm:gap-3 mb-6">
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg gradient-pulse py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-primary-foreground">
-                    Sign In
-                  </Link>
-                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg border border-border bg-card py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-foreground">
-                    Sign Up
-                  </Link>
+                <div className="flex gap-3 mb-6">
+                  <Link to="/login" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg gradient-pulse py-3 text-sm font-medium text-primary-foreground">Sign In</Link>
+                  <Link to="/signup" onClick={() => setMobileOpen(false)} className="flex-1 text-center rounded-lg border border-border bg-card py-3 text-sm font-medium text-foreground">Sign Up</Link>
                 </div>
               )}
 
               {/* Nav Links */}
               <div className="space-y-1">
-                {navLinks.map((link, index) => (
-                  link.href.startsWith("/") ? (
-                    <motion.div
-                      key={link.label}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
-                    >
-                      <Link
-                        to={link.href}
-                        className="block font-body text-lg text-muted-foreground transition-colors hover:text-foreground py-2"
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {link.label}
-                      </Link>
-                    </motion.div>
-                  ) : (
-                    <motion.a
-                      key={link.label}
-                      href={link.href}
-                      className="block font-body text-lg text-muted-foreground transition-colors hover:text-foreground py-2"
-                      onClick={() => setMobileOpen(false)}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
-                    >
+                {navLinks.filter(l => !l.hasDropdown).map((link, index) => (
+                  <motion.div key={link.label} initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 + index * 0.1 }}>
+                    <Link to={link.href} className="block font-body text-lg text-muted-foreground transition-colors hover:text-foreground py-2" onClick={() => setMobileOpen(false)}>
                       {link.label}
-                    </motion.a>
-                  )
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
             </div>

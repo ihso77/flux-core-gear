@@ -9,9 +9,9 @@ interface SEOProps {
 }
 
 const defaults = {
-  title: "Nova Store — Premium Gaming Peripherals & Gear",
-  description: "Shop the best gaming keyboards, mice, headsets & accessories. Pro-tested gear with free shipping. Level up your gaming setup with Nova.",
-  keywords: "gaming keyboard, gaming mouse, gaming headset, gaming peripherals, esports gear, mechanical keyboard, RGB gaming, pro gaming setup",
+  title: "Nova Store — Best Gaming Keyboards, Mouse, Headsets & Peripherals | Buy Online",
+  description: "Shop the best gaming keyboards, gaming mouse, headsets & accessories at Nova Store. Pro-tested mechanical keyboards, RGB gaming peripherals, esports gear with free shipping. أفضل أجهزة قيمنق للبيع اونلاين. Level up your gaming setup today!",
+  keywords: "gaming keyboard, gaming mouse, gaming headset, gaming peripherals, esports gear, mechanical keyboard, RGB gaming, pro gaming setup, best gaming keyboard 2024, أفضل لوحة مفاتيح قيمنق, أفضل ماوس قيمنق, gaming accessories online, buy gaming gear, gaming setup, Razer, Logitech, SteelSeries, gaming keyboard Saudi Arabia, gaming mouse UAE, best gaming headset, wireless gaming mouse, 60% keyboard, TKL keyboard, gaming monitor, gaming controller, Nova Store, أجهزة ألعاب, ملحقات قيمنق, سماعة قيمنق, لوحة مفاتيح ميكانيكية, gaming peripherals shop, cheap gaming keyboard, premium gaming gear, competitive gaming equipment, FPS gaming mouse, MMO gaming keyboard, streaming gear, content creator setup",
   ogImage: "/og-image.png",
 };
 
@@ -36,13 +36,18 @@ const SEOHead = ({ title, description, keywords, ogImage, canonical }: SEOProps)
 
     setMeta("description", d);
     setMeta("keywords", k);
+    setMeta("robots", "index, follow, max-snippet:-1, max-image-preview:large");
+    setMeta("author", "Nova Store");
     setMeta("og:title", t, "property");
     setMeta("og:description", d, "property");
     setMeta("og:image", img, "property");
     setMeta("og:type", "website", "property");
+    setMeta("og:site_name", "Nova Store", "property");
+    setMeta("og:locale", "en_US", "property");
     setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", t);
     setMeta("twitter:description", d);
+    setMeta("twitter:image", img);
 
     if (canonical) {
       let link = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -54,7 +59,7 @@ const SEOHead = ({ title, description, keywords, ogImage, canonical }: SEOProps)
       link.setAttribute("href", canonical);
     }
 
-    // JSON-LD Structured Data
+    // JSON-LD
     const existingLD = document.getElementById("nova-jsonld");
     if (existingLD) existingLD.remove();
 
@@ -65,10 +70,27 @@ const SEOHead = ({ title, description, keywords, ogImage, canonical }: SEOProps)
       "@context": "https://schema.org",
       "@type": "Store",
       name: "Nova Store",
+      alternateName: "Nova Gaming Store",
       description: d,
       url: window.location.origin,
       logo: `${window.location.origin}/favicon.ico`,
+      image: `${window.location.origin}${img}`,
       priceRange: "$$",
+      currenciesAccepted: "USD, SAR, AED",
+      paymentAccepted: "Credit Card, Debit Card, PayPal",
+      areaServed: "Worldwide",
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: "Gaming Peripherals",
+        itemListElement: [
+          { "@type": "OfferCatalog", name: "Gaming Keyboards" },
+          { "@type": "OfferCatalog", name: "Gaming Mice" },
+          { "@type": "OfferCatalog", name: "Gaming Headsets" },
+          { "@type": "OfferCatalog", name: "Gaming Monitors" },
+          { "@type": "OfferCatalog", name: "Gaming Controllers" },
+          { "@type": "OfferCatalog", name: "Gaming Accessories" },
+        ]
+      },
       sameAs: [],
       potentialAction: {
         "@type": "SearchAction",

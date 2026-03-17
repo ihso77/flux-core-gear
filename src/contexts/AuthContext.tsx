@@ -7,6 +7,7 @@ interface AuthContextType {
   profile: Profile | null;
   session: Session | null;
   loading: boolean;
+  isAdmin: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -17,20 +18,17 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Helper to set a cookie
 const setCookie = (name: string, value: string, days: number = 365) => {
   const expires = new Date(Date.now() + days * 24 * 60 * 60 * 1000).toUTCString();
   document.cookie = `${name}=${value}; path=/; expires=${expires}; SameSite=Lax; Secure`;
 };
 
-// Helper to get a cookie
 const getCookie = (name: string): string | null => {
   const cookies = document.cookie.split(';');
   const cookie = cookies.find(c => c.trim().startsWith(`${name}=`));
   return cookie ? cookie.split('=')[1].trim() : null;
 };
 
-// Helper to delete a cookie
 const deleteCookie = (name: string) => {
   document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 };
@@ -40,8 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Fetch profile data
   const fetchProfile = useCallback(async (userId: string): Promise<Profile | null> => {
     try {
       const { data, error } = await supabase
@@ -54,6 +52,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error('Error fetching profile:', error);
         return null;
       }
+      if (data) {
+        setIsAdmin(data.role === 'admin');
+      }
       return data as Profile;
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -61,7 +62,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Create profile if it doesn't exist
   const createProfileIfMissing = useCallback(async (userId: string, email: string, fullName?: string) => {
     try {
       const { data: existingProfile } = await supabase
@@ -86,7 +86,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (error) {
           console.error('Error creating profile:', error);
         } else {
-          // Store the name in a cookie for persistence
           setCookie('nova_user_name', name);
           setCookie('nova_user_email', email);
         }
@@ -112,10 +111,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    // Initialize auth with stored session
     const initializeAuth = async () => {
       try {
-        // Check for existing session
         const { data: { session: existingSession } } = await supabase.auth.getSession();
         
         if (!mounted) return;
@@ -124,11 +121,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setSession(existingSession);
           setUser(existingSession.user);
           
-          // Get stored name from cookie
           const storedName = getCookie('nova_user_name');
           const fullName = existingSession.user.user_metadata?.full_name || storedName || undefined;
           
-          // Create/update profile
           await createProfileIfMissing(
             existingSession.user.id,
             existingSession.user.email || '',
@@ -140,10 +135,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setProfile(profileData);
           }
         } else {
-          // No session, clear user state
           setUser(null);
           setProfile(null);
           setSession(null);
+          setIsAdmin(false);
         }
 
         setLoading(false);
@@ -155,7 +150,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initializeAuth();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
 
@@ -166,8 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const storedName = getCookie('nova_user_name');
         const fullName = newSession.user.user_metadata?.full_name || storedName || undefined;
         
-        // On sign up, create profile
-        if (event === 'SIGNED_UP' || event === 'SIGNED_IN') {
+        if (event === 'SIGNED_IN') {
           await createProfileIfMissing(
             newSession.user.id,
             newSession.user.email || '',
@@ -181,7 +174,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setProfile(null);
-        // Clear cookies on sign out
+        setIsAdmin(false);
         if (event === 'SIGNED_OUT') {
           deleteCookie('nova_user_name');
           deleteCookie('nova_user_email');
@@ -199,15 +192,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (!error) {
-        setCookie('nova_user_email', email);
-      }
-      
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (!error) setCookie('nova_user_email', email);
       return { error: error as Error | null };
     } catch (error) {
       return { error: error as Error };
@@ -220,18 +206,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            full_name: name,
-          },
-        },
+        options: { data: { full_name: name } },
       });
-      
       if (!error) {
         setCookie('nova_user_name', name);
         setCookie('nova_user_email', email);
       }
-      
       return { error: error as Error | null };
     } catch (error) {
       return { error: error as Error };
@@ -243,37 +223,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setProfile(null);
     setSession(null);
-    
-    // Clear all auth cookies
+    setIsAdmin(false);
     deleteCookie('nova_user_name');
     deleteCookie('nova_user_email');
     deleteCookie('nova_session_id');
-    
-    // Clear localStorage
     localStorage.removeItem('nova-auth-token');
     localStorage.removeItem('nova_session_id');
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return { error: new Error('No user logged in') };
-
     try {
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          ...updates,
-          updated_at: new Date().toISOString(),
-        });
-
+        .upsert({ id: user.id, ...updates, updated_at: new Date().toISOString() });
       if (!error) {
         setProfile(prev => prev ? { ...prev, ...updates } : null);
-        // Update cookie if name changed
-        if (updates.full_name) {
-          setCookie('nova_user_name', updates.full_name);
-        }
+        if (updates.full_name) setCookie('nova_user_name', updates.full_name);
       }
-
       return { error };
     } catch (error) {
       return { error: error as Error };
@@ -292,16 +259,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const value: AuthContextType = {
-    user,
-    profile,
-    session,
-    loading,
-    signIn,
-    signUp,
-    signOut,
-    updateProfile,
-    resetPassword,
-    refreshProfile,
+    user, profile, session, loading, isAdmin,
+    signIn, signUp, signOut, updateProfile, resetPassword, refreshProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
