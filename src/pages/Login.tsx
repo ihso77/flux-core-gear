@@ -10,7 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, signInWithGithub } = useAuth();
   const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
@@ -18,6 +18,15 @@ const Login = () => {
     const { error } = await signInWithGoogle();
     if (error) {
       toast.error(error.message || "Failed to sign in with Google");
+      setIsLoading(false);
+    }
+  };
+
+  const handleGithubLogin = async () => {
+    setIsLoading(true);
+    const { error } = await signInWithGithub();
+    if (error) {
+      toast.error(error.message || "Failed to sign in with GitHub");
       setIsLoading(false);
     }
   };
@@ -185,9 +194,12 @@ const Login = () => {
               <span className="sm:hidden">Google</span>
             </motion.button>
             <motion.button
+              type="button"
+              onClick={handleGithubLogin}
+              disabled={isLoading}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border border-border bg-background py-2.5 sm:py-3 font-body text-xs sm:text-sm font-medium text-foreground transition-colors hover:bg-card touch-manipulation"
+              className="flex items-center justify-center gap-1.5 sm:gap-2 rounded-lg sm:rounded-xl border border-border bg-background py-2.5 sm:py-3 font-body text-xs sm:text-sm font-medium text-foreground transition-colors hover:bg-card touch-manipulation disabled:opacity-50"
             >
               <Github className="h-4 w-4 sm:h-5 sm:w-5" />
               <span className="hidden sm:inline">GitHub</span>
