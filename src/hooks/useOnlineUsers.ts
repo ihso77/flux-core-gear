@@ -16,12 +16,9 @@ interface OnlineStats {
   recentUsers: OnlineUser[];
 }
 
-// Generate or get anonymous session ID (persisted in cookies)
 const getSessionId = (): string => {
-  // Check localStorage first
   let sessionId = localStorage.getItem('nova_session_id');
   
-  // Check cookies as backup
   if (!sessionId) {
     const cookies = document.cookie.split(';');
     const sessionCookie = cookies.find(c => c.trim().startsWith('nova_session='));
@@ -30,12 +27,9 @@ const getSessionId = (): string => {
     }
   }
   
-  // Create new session if none exists
   if (!sessionId) {
     sessionId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    // Save to localStorage
     localStorage.setItem('nova_session_id', sessionId);
-    // Also save to cookie (expires in 30 days)
     document.cookie = `nova_session=${sessionId}; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
   }
   
@@ -51,10 +45,8 @@ export function useOnlineUsers() {
   });
   const [loading, setLoading] = useState(true);
 
-  // Update user presence
   const updatePresence = useCallback(async (userId?: string) => {
     const sessionId = getSessionId();
-    
     try {
       await supabase.from('online_presence').upsert({
         user_id: userId || null,
@@ -68,7 +60,6 @@ export function useOnlineUsers() {
     }
   }, []);
 
-  // Fetch online stats
   const fetchStats = useCallback(async () => {
     try {
       const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
@@ -95,13 +86,17 @@ export function useOnlineUsers() {
         totalOnline: data?.length || 0,
         authenticatedUsers: authenticatedUsers.length,
         anonymousUsers: anonymousUsers.length,
-        recentUsers: data?.slice(0, 10).map(u => ({
-          id: u.user_id || u.session_id,
-          email: u.profiles?.email || 'Anonymous',
-          full_name: u.profiles?.full_name || 'Guest',
-          last_seen: new Date(u.last_seen),
-          page_views: 1
-        })) || []
+        recentUsers: data?.slice(0, 10).map(u => {
+          // profiles comes back as an array from the join, take first item
+          const prof = Array.isArray(u.profiles) ? u.profiles[0] : u.profiles;
+          return {
+            id: u.user_id || u.session_id,
+            email: prof?.email || 'Anonymous',
+            full_name: prof?.full_name || 'Guest',
+            last_seen: new Date(u.last_seen),
+            page_views: 1
+          };
+        }) || []
       });
     } catch (error) {
       console.debug('Failed to fetch online stats:', error);
@@ -119,11 +114,10 @@ export function useOnlineUsers() {
   return { stats, loading, updatePresence, fetchStats };
 }
 
-// Hook to track current user's presence - updates every 800ms
+// Track presence - updates every 30 seconds (not 800ms which is way too aggressive)
 export function usePresenceTracker(userId?: string) {
   const updatePresence = useCallback(async () => {
     const sessionId = getSessionId();
-    
     try {
       await supabase.from('online_presence').upsert({
         user_id: userId || null,
@@ -137,21 +131,12 @@ export function usePresenceTracker(userId?: string) {
   }, [userId]);
 
   useEffect(() => {
-    // Update immediately
     updatePresence();
-
-    // Update every 800ms (less than 1 second)
-    const interval = setInterval(updatePresence, 800);
-
-    // Update on visibility change
+    const interval = setInterval(updatePresence, 30000);
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        updatePresence();
-      }
+      if (document.visibilityState === 'visible') updatePresence();
     };
     document.addEventListener('visibilitychange', handleVisibility);
-
-    // Cleanup on unmount
     return () => {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibility);
