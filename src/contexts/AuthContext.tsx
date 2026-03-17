@@ -238,16 +238,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    setSession(null);
-    setIsAdmin(false);
-    deleteCookie('nova_user_name');
-    deleteCookie('nova_user_email');
-    deleteCookie('nova_session_id');
-    localStorage.removeItem('nova-auth-token');
-    localStorage.removeItem('nova_session_id');
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    } finally {
+      // Always clear local state regardless of server response
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      setIsAdmin(false);
+      deleteCookie('nova_user_name');
+      deleteCookie('nova_user_email');
+      deleteCookie('nova_session_id');
+      localStorage.removeItem('nova-auth-token');
+      localStorage.removeItem('nova_session_id');
+      // Clear any potential supabase persistent items
+      Object.keys(localStorage).forEach(key => {
+        if (key.includes('supabase.auth.token') || key.includes('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+      window.location.href = '/'; // Hard redirect to ensure clean state
+    }
   };
 
   const updateProfile = async (updates: Partial<Profile>) => {

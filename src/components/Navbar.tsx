@@ -65,9 +65,9 @@ const Navbar = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut();
     setUserMenuOpen(false);
-    navigate("/");
+    setMobileOpen(false);
+    await signOut();
   };
 
   const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0] || "User";
