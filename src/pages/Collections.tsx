@@ -27,15 +27,15 @@ const Collections = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
-      <section className="pt-28 pb-8 sm:pt-36">
-        <div className="container mx-auto px-4">
+      <section className="pt-20 sm:pt-28 md:pt-36 pb-4 sm:pb-6 md:pb-8">
+        <div className="container mx-auto px-3 sm:px-4">
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease }}
-            className="font-display text-3xl sm:text-5xl font-bold text-foreground mb-4 text-center"
+            className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-2 sm:mb-3 md:mb-4 text-center"
           >
             Collections
           </motion.h1>
@@ -43,13 +43,13 @@ const Collections = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.15, duration: 0.6 }}
-            className="text-center font-body text-muted-foreground mb-10 max-w-lg mx-auto"
+            className="text-center font-body text-xs sm:text-sm md:text-base text-muted-foreground mb-4 sm:mb-6 md:mb-10 max-w-lg mx-auto px-2"
           >
             Browse our curated collections of premium gaming gear
           </motion.p>
 
-          {/* Category pills */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
+          {/* Category pills - Horizontal scroll on mobile */}
+          <div className="flex gap-1.5 sm:gap-2 md:gap-3 overflow-x-auto pb-3 sm:pb-4 mb-4 sm:mb-6 md:mb-10 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-hide snap-x snap-mandatory">
             {categories.map((c, i) => (
               <motion.button
                 key={c.id}
@@ -57,13 +57,13 @@ const Collections = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.04, duration: 0.4 }}
                 onClick={() => handleCategory(c.id)}
-                className={`flex items-center gap-2 rounded-full border px-4 py-2 font-body text-xs sm:text-sm font-medium transition-all duration-300 ${
+                className={`flex items-center gap-1.5 sm:gap-2 rounded-full border px-3 sm:px-4 py-1.5 sm:py-2 font-body text-[10px] sm:text-xs md:text-sm font-medium transition-all duration-300 flex-shrink-0 touch-manipulation snap-start ${
                   active === c.id
-                    ? "border-primary bg-primary/10 text-foreground glow-nebula"
+                    ? "border-primary bg-primary/10 text-foreground"
                     : "border-border text-muted-foreground hover:border-muted-foreground hover:text-foreground"
                 }`}
               >
-                <c.icon className="h-3.5 w-3.5" />
+                <c.icon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
                 {c.label}
               </motion.button>
             ))}
