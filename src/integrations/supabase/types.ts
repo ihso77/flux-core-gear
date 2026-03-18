@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      customer_showcase: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          customer_name: string
+          description: string | null
+          id: string
+          image_url: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          customer_name: string
+          description?: string | null
+          id?: string
+          image_url: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          customer_name?: string
+          description?: string | null
+          id?: string
+          image_url?: string
+        }
+        Relationships: []
+      }
       online_presence: {
         Row: {
           id: string
@@ -65,6 +92,36 @@ export type Database = {
           id?: string
           role?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          created_at: string
+          customer_name: string
+          id: string
+          message: string
+          product_handle: string | null
+          rating: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          customer_name: string
+          id?: string
+          message: string
+          product_handle?: string | null
+          rating: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string
+          id?: string
+          message?: string
+          product_handle?: string | null
+          rating?: number
+          user_id?: string | null
         }
         Relationships: []
       }
