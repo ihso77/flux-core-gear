@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
-  Users, Package, TrendingUp, 
-  Activity, Clock, Globe,
-  LogOut, BarChart3, Settings, Shield, Eye, RefreshCw
+  Users, Activity, Clock, Globe,
+  LogOut, BarChart3, Settings, Shield, Eye, RefreshCw, Camera
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AdminShowcaseManager from "@/components/admin/AdminShowcaseManager";
 
 interface OnlineUser {
   id: string;
@@ -22,9 +22,7 @@ interface OnlineUser {
 
 interface Stats {
   totalUsers: number;
-  totalProducts: number;
-  totalOrders: number;
-  revenue: number;
+  totalReviews: number;
 }
 
 const Admin = () => {
@@ -32,7 +30,7 @@ const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
-  const [stats, setStats] = useState<Stats>({ totalUsers: 0, totalProducts: 0, totalOrders: 0, revenue: 0 });
+  const [stats, setStats] = useState<Stats>({ totalUsers: 0, totalReviews: 0 });
   const [activeTab, setActiveTab] = useState('overview');
 
   useEffect(() => {
@@ -51,10 +49,7 @@ const Admin = () => {
         .gte('last_seen', fiveMinutesAgo)
         .order('last_seen', { ascending: false })
         .limit(50);
-
-      if (!error && data) {
-        setOnlineUsers(data as unknown as OnlineUser[]);
-      }
+      if (!error && data) setOnlineUsers(data as unknown as OnlineUser[]);
     } catch (error) {
       console.debug('Error fetching online users:', error);
     }
@@ -62,14 +57,13 @@ const Admin = () => {
 
   const fetchStats = async () => {
     try {
-      const [usersCount] = await Promise.all([
+      const [usersCount, reviewsCount] = await Promise.all([
         supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('reviews').select('id', { count: 'exact', head: true }),
       ]);
       setStats({
         totalUsers: usersCount.count || 0,
-        totalProducts: 0,
-        totalOrders: 0,
-        revenue: 0
+        totalReviews: reviewsCount.count || 0,
       });
     } catch (error) {
       console.debug('Error fetching stats:', error);
@@ -120,16 +114,21 @@ const Admin = () => {
   const authenticatedUsers = onlineUsers.filter(u => u.user_id);
   const anonymousUsers = onlineUsers.filter(u => !u.user_id);
 
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'online', label: 'Online Users', icon: Activity },
+    { id: 'showcase', label: 'Customer Photos', icon: Camera },
+    { id: 'analytics', label: 'Analytics', icon: Eye },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Navbar />
       <div className="mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 max-w-7xl py-4 sm:py-6 md:py-8 pt-16 sm:pt-20 md:pt-24">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 sm:mb-8">
           <div>
             <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
               Admin <span className="text-gradient-pulse">Dashboard</span>
@@ -137,7 +136,6 @@ const Admin = () => {
             <p className="text-sm text-muted-foreground mt-1">Welcome back, {profile?.full_name || "Admin"}</p>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-            {/* Live counter */}
             <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-green-500/10 border border-green-500/20">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -159,12 +157,7 @@ const Admin = () => {
 
         {/* Tabs */}
         <div className="flex gap-1.5 sm:gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2 scrollbar-hide">
-          {[
-            { id: 'overview', label: 'Overview', icon: BarChart3 },
-            { id: 'online', label: 'Online Users', icon: Activity },
-            { id: 'analytics', label: 'Analytics', icon: Eye },
-            { id: 'settings', label: 'Settings', icon: Settings },
-          ].map((tab) => (
+          {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
@@ -184,17 +177,12 @@ const Admin = () => {
             <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4">
               <StatCard title="Online Now" value={onlineUsers.length} subtitle={`${authenticatedUsers.length} logged in`} icon={Activity} color="green" />
               <StatCard title="Total Users" value={stats.totalUsers} subtitle="Registered" icon={Users} color="blue" />
-              <StatCard title="Authenticated" value={authenticatedUsers.length} subtitle="Logged in now" icon={Shield} color="purple" />
-              <StatCard title="Guests" value={anonymousUsers.length} subtitle="Anonymous visitors" icon={TrendingUp} color="yellow" />
+              <StatCard title="Reviews" value={stats.totalReviews} subtitle="Customer ratings" icon={Eye} color="purple" />
+              <StatCard title="Guests" value={anonymousUsers.length} subtitle="Anonymous visitors" icon={Globe} color="yellow" />
             </div>
 
-            {/* Live Activity Feed */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="rounded-xl border border-border bg-card p-4 sm:p-6"
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="rounded-xl border border-border bg-card p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl gradient-pulse flex items-center justify-center">
@@ -209,7 +197,6 @@ const Admin = () => {
                   <RefreshCw className="h-4 w-4 text-muted-foreground" />
                 </button>
               </div>
-
               <div className="grid grid-cols-3 gap-3">
                 <div className="rounded-xl bg-green-500/10 border border-green-500/20 p-3 text-center">
                   <p className="text-2xl sm:text-3xl font-display font-bold text-green-400">{onlineUsers.length}</p>
@@ -246,21 +233,15 @@ const Admin = () => {
                   {onlineUsers.map((u, index) => {
                     const prof = getProfileData(u);
                     return (
-                      <motion.div
-                        key={u.session_id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                      <motion.div key={u.session_id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.03 }}
-                        className="flex items-center justify-between p-3 sm:p-4 hover:bg-secondary/50 transition-colors"
-                      >
+                        className="flex items-center justify-between p-3 sm:p-4 hover:bg-secondary/50 transition-colors">
                         <div className="flex items-center gap-3">
                           <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-primary/50 flex items-center justify-center text-xs font-bold text-primary-foreground">
                             {prof?.full_name?.charAt(0) || prof?.email?.charAt(0)?.toUpperCase() || '?'}
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-foreground">
-                              {prof?.full_name || prof?.email || 'Anonymous User'}
-                            </p>
+                            <p className="text-sm font-medium text-foreground">{prof?.full_name || prof?.email || 'Anonymous User'}</p>
                             <p className="text-xs text-muted-foreground flex items-center gap-1">
                               <Globe className="h-3 w-3" />
                               <span className="truncate max-w-[200px]">{u.page_url || '/'}</span>
@@ -283,6 +264,15 @@ const Admin = () => {
                   })}
                 </div>
               )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Showcase Tab */}
+        {activeTab === 'showcase' && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
+              <AdminShowcaseManager />
             </div>
           </motion.div>
         )}
