@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X, Search, ChevronDown, Keyboard, Mouse, Headphones, Monitor, Gamepad2, Cable, Package, Sparkles, User, LogOut, Settings, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CartDrawer from "./CartDrawer";
+import CurrencySelector from "./CurrencyConverter";
 import { useAuth } from "@/contexts/AuthContext";
 
 const categories = [
