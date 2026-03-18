@@ -277,11 +277,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
-    } catch (error) {
-      console.error('Error during sign out:', error);
-    } finally {
-      // Always clear local state regardless of server response
+      // Clear local state first for immediate UI update
       setUser(null);
       setProfile(null);
       setSession(null);
@@ -289,15 +285,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       deleteCookie('nova_user_name');
       deleteCookie('nova_user_email');
       deleteCookie('nova_session_id');
-      localStorage.removeItem('nova-auth-token');
-      localStorage.removeItem('nova_session_id');
-      // Clear any potential supabase persistent items
-      Object.keys(localStorage).forEach(key => {
-        if (key.includes('supabase.auth.token') || key.includes('sb-')) {
-          localStorage.removeItem(key);
-        }
-      });
-      window.location.href = '/'; // Hard redirect to ensure clean state
+      
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error during sign out:', error);
     }
   };
 
