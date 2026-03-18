@@ -115,9 +115,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const initializeAuth = async () => {
       try {
-        const { data: { session: existingSession } } = await supabase.auth.getSession();
+        // First try to get session
+        const { data: { session: existingSession }, error: sessionError } = await supabase.auth.getSession();
         
         if (!mounted) return;
+
+        if (sessionError) {
+          console.debug('Session error, attempting refresh:', sessionError.message);
+          // Try refreshing the session
+          const { data: { session: refreshedSession } } = await supabase.auth.refreshSession();
+          if (refreshedSession?.user && mounted) {
+            setSession(refreshedSession);
+            setUser(refreshedSession.user);
+            await createProfileIfMissing(refreshedSession.user.id, refreshedSession.user.email || '');
+            const profileData = await fetchProfile(refreshedSession.user.id);
+            if (mounted) setProfile(profileData);
+          }
+          if (mounted) setLoading(false);
+          return;
+        }
 
         if (existingSession?.user) {
           setSession(existingSession);
@@ -143,7 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setIsAdmin(false);
         }
 
-        setLoading(false);
+        if (mounted) setLoading(false);
       } catch (error) {
         console.error('Error initializing auth:', error);
         if (mounted) setLoading(false);
@@ -154,6 +170,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
       if (!mounted) return;
+      
+      // Avoid unnecessary state updates
+      if (event === 'TOKEN_REFRESHED' && newSession?.user?.id === user?.id) {
+        setSession(newSession);
+        return;
+      }
 
       setSession(newSession);
       setUser(newSession?.user ?? null);
@@ -183,7 +205,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      setLoading(false);
+      if (mounted) setLoading(false);
     });
 
     return () => {
@@ -255,11 +277,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
-    } catch (error) {
-      console.error('Error during sign out:', error);
-    } finally {
-      // Always clear local state regardless of server response
+      // Clear local state first for immediate UI update
       setUser(null);
       setProfile(null);
       setSession(null);
@@ -267,15 +285,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       deleteCookie('nova_user_name');
       deleteCookie('nova_user_email');
       deleteCookie('nova_session_id');
-      localStorage.removeItem('nova-auth-token');
-      localStorage.removeItem('nova_session_id');
-      // Clear any potential supabase persistent items
-      Object.keys(localStorage).forEach(key => {
-        if (key.includes('supabase.auth.token') || key.includes('sb-')) {
-          localStorage.removeItem(key);
-        }
-      });
-      window.location.href = '/'; // Hard redirect to ensure clean state
+      
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error('Error during sign out:', error);
     }
   };
 

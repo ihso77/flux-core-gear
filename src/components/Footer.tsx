@@ -9,7 +9,7 @@ const footerLinks = {
 
 const socialLinks = [
   { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Instagram, href: "https://www.instagram.com/nova.store92/", label: "Instagram" },
   { icon: Youtube, href: "#", label: "YouTube" },
   { icon: Github, href: "#", label: "GitHub" },
 ];

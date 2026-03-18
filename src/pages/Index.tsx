@@ -4,6 +4,8 @@ import MarqueeBanner from "@/components/MarqueeBanner";
 import ProductGrid from "@/components/ProductGrid";
 import FeaturesSection from "@/components/FeaturesSection";
 import TrustBadges from "@/components/TrustBadges";
+import ReviewsSection from "@/components/ReviewsSection";
+import CustomerShowcase from "@/components/CustomerShowcase";
 import NewsletterSection from "@/components/NewsletterSection";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -19,6 +21,8 @@ const Index = () => {
       <ProductGrid />
       <FeaturesSection />
       <TrustBadges />
+      <ReviewsSection />
+      <CustomerShowcase />
       <NewsletterSection />
       <Footer />
       <ScrollToTop />
