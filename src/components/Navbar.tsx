@@ -220,6 +220,7 @@ const Navbar = () => {
             )}
           </AnimatePresence>
 
+          <CurrencySelector />
           <CartDrawer />
 
           {/* User Menu */}
