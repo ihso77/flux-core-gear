@@ -19,9 +19,13 @@ interface CartStore {
   checkoutUrl: string | null;
   isLoading: boolean;
   isSyncing: boolean;
+  discountCode: string | null;
+  discountPercentage: number;
   addItem: (item: Omit<CartItem, 'lineId'>) => Promise<void>;
   updateQuantity: (variantId: string, quantity: number) => Promise<void>;
   removeItem: (variantId: string) => Promise<void>;
+  applyDiscount: (code: string) => { success: boolean; message: string };
+  removeDiscount: () => void;
   clearCart: () => void;
   syncCart: () => Promise<void>;
   getCheckoutUrl: () => string | null;
@@ -35,6 +39,8 @@ export const useCartStore = create<CartStore>()(
       checkoutUrl: null,
       isLoading: false,
       isSyncing: false,
+      discountCode: null,
+      discountPercentage: 0,
 
       addItem: async (item) => {
         const { items, cartId, clearCart } = get();
@@ -106,8 +112,33 @@ export const useCartStore = create<CartStore>()(
         }
       },
 
-      clearCart: () => set({ items: [], cartId: null, checkoutUrl: null }),
-      getCheckoutUrl: () => get().checkoutUrl,
+      applyDiscount: (code: string) => {
+        const upperCode = code.toUpperCase();
+        if (upperCode === 'NOVA10') {
+          const expirationDate = new Date('2026-04-01');
+          if (new Date() < expirationDate) {
+            set({ discountCode: 'NOVA10', discountPercentage: 10 });
+            return { success: true, message: 'Discount applied successfully!' };
+          } else {
+            return { success: false, message: 'This discount code has expired.' };
+          }
+        }
+        return { success: false, message: 'Invalid discount code.' };
+      },
+
+      removeDiscount: () => set({ discountCode: null, discountPercentage: 0 }),
+
+      clearCart: () => set({ items: [], cartId: null, checkoutUrl: null, discountCode: null, discountPercentage: 0 }),
+      getCheckoutUrl: () => {
+        const { checkoutUrl, discountCode } = get();
+        if (!checkoutUrl) return null;
+        if (discountCode) {
+          const url = new URL(checkoutUrl);
+          url.searchParams.set('discount', discountCode);
+          return url.toString();
+        }
+        return checkoutUrl;
+      },
 
       syncCart: async () => {
         const { cartId, isSyncing, clearCart } = get();
@@ -128,7 +159,13 @@ export const useCartStore = create<CartStore>()(
     {
       name: 'shopify-cart',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ items: state.items, cartId: state.cartId, checkoutUrl: state.checkoutUrl }),
+      partialize: (state) => ({ 
+        items: state.items, 
+        cartId: state.cartId, 
+        checkoutUrl: state.checkoutUrl,
+        discountCode: state.discountCode,
+        discountPercentage: state.discountPercentage
+      }),
     }
   )
 );

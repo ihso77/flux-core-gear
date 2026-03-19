@@ -1,14 +1,30 @@
 import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, Tag, X } from "lucide-react";
+import { toast } from "sonner";
 import { useCartStore } from "@/stores/cartStore";
 import { motion, AnimatePresence } from "framer-motion";
 
 const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { items, isLoading, isSyncing, updateQuantity, removeItem, getCheckoutUrl, syncCart } = useCartStore();
+  const { 
+    items, 
+    isLoading, 
+    isSyncing, 
+    updateQuantity, 
+    removeItem, 
+    getCheckoutUrl, 
+    syncCart,
+    discountCode,
+    discountPercentage,
+    applyDiscount,
+    removeDiscount
+  } = useCartStore();
+  const [discountInput, setDiscountInput] = useState("");
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
+  const subtotal = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
+  const discountAmount = (subtotal * discountPercentage) / 100;
+  const totalPrice = subtotal - discountAmount;
   const currency = items[0]?.price.currencyCode || 'USD';
 
   useEffect(() => { if (isOpen) syncCart(); }, [isOpen, syncCart]);
@@ -18,6 +34,17 @@ const CartDrawer = () => {
     if (checkoutUrl) {
       window.open(checkoutUrl, '_blank');
       setIsOpen(false);
+    }
+  };
+
+  const handleApplyDiscount = () => {
+    if (!discountInput.trim()) return;
+    const result = applyDiscount(discountInput);
+    if (result.success) {
+      toast.success(result.message);
+      setDiscountInput("");
+    } else {
+      toast.error(result.message);
     }
   };
 
@@ -114,11 +141,61 @@ const CartDrawer = () => {
                 </AnimatePresence>
               </div>
 
-              <div className="flex-shrink-0 space-y-2 sm:space-y-3 md:space-y-4 border-t border-border pt-2 sm:pt-3 md:pt-4 pb-4 sm:pb-6 md:pb-0 px-3 sm:px-4 md:px-0 safe-area-bottom">
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-sm sm:text-base md:text-lg font-semibold text-foreground">Total</span>
-                  <span className="font-display text-base sm:text-lg md:text-xl font-bold text-foreground">{currency} {totalPrice.toFixed(2)}</span>
+              <div className="flex-shrink-0 space-y-2 sm:space-y-3 md:space-y-4 border-t border-border pt-4 sm:pt-5 md:pt-6 pb-4 sm:pb-6 md:pb-0 px-3 sm:px-4 md:px-0 safe-area-bottom">
+                {/* Discount Code Section */}
+                {!discountCode ? (
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <Tag className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+                      <input
+                        type="text"
+                        placeholder="Discount code"
+                        value={discountInput}
+                        onChange={(e) => setDiscountInput(e.target.value)}
+                        className="w-full rounded-md border border-border bg-background py-1.5 pl-8 pr-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+                        onKeyDown={(e) => e.key === 'Enter' && handleApplyDiscount()}
+                      />
+                    </div>
+                    <button
+                      onClick={handleApplyDiscount}
+                      className="rounded-md bg-secondary px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary/80"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between rounded-md bg-primary/10 px-3 py-2 text-primary">
+                    <div className="flex items-center gap-2">
+                      <Tag className="h-4 w-4" />
+                      <span className="text-xs font-semibold">{discountCode} Applied</span>
+                      <span className="text-[10px] bg-primary/20 px-1.5 rounded">{discountPercentage}% OFF</span>
+                    </div>
+                    <button
+                      onClick={removeDiscount}
+                      className="hover:text-foreground transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
+
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
+                    <span>Subtotal</span>
+                    <span>{currency} {subtotal.toFixed(2)}</span>
+                  </div>
+                  {discountAmount > 0 && (
+                    <div className="flex items-center justify-between text-xs sm:text-sm text-primary font-medium">
+                      <span>Discount ({discountPercentage}%)</span>
+                      <span>-{currency} {discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="font-display text-sm sm:text-base md:text-lg font-semibold text-foreground">Total</span>
+                    <span className="font-display text-base sm:text-lg md:text-xl font-bold text-foreground">{currency} {totalPrice.toFixed(2)}</span>
+                  </div>
                 </div>
+                
                 <button
                   onClick={handleCheckout}
                   disabled={isLoading || isSyncing}

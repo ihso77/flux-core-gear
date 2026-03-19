@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://lipthpnciloarvfwfmfe.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpcHRocG5jaWxvYXJ2ZndmbWZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNTQ1NzUsImV4cCI6MjA4ODczMDU3NX0.NtYuldnqUin0Zzw7zNDekB_wHiyCiEOFdHYwOejw-3E';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
 // Custom cookie-based storage adapter for better session persistence
 const cookieStorage = {
